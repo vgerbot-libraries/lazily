@@ -1,5 +1,5 @@
 # compiled output
-/dist
+dist
 /tmp
 /out-tsc
 
@@ -37,7 +37,7 @@ testem.log
 Thumbs.db
 
 # Nx
-.nx/cache
+.nx
 
 # Changeset
 .changeset/*.md

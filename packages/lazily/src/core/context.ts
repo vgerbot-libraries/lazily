@@ -1,7 +1,6 @@
 export interface LazilyContext {
-    owner: unknown;
     initialized: boolean;
-    value: unknown;
+    value: object;
 }
 const contexts = new WeakMap<object, LazilyContext>();
 

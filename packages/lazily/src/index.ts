@@ -1,3 +1,6 @@
+import { create } from "./core/create";
+import { onInitialized } from "./core/onInitialized";
+
 /**
  * Hello World function
  * @param name - Optional name to greet
@@ -8,4 +11,17 @@ export function helloWorld(name?: string): string {
     return `Hello, ${name}!`;
   }
   return 'Hello, World!';
+}
+
+class Editor {}
+
+class Doc {
+    declare editor:Editor;
+    constructor() {
+        this.editor = create(() => new Editor())
+        onInitialized(this.editor, (editor: Editor) => {
+            console.log('editor initialized', editor);
+        });
+
+    }
 }

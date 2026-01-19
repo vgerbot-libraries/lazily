@@ -1,10 +1,11 @@
-import { clearContext, getContext } from "./context";
-import { IS_INITIALIZED, LazilyInstance, RELEASE } from "./lazily-instance";
+import { clearContext, getContext } from './context';
+import { INITIALIZE, IS_INITIALIZED, type LazilyInstance, RELEASE } from './lazily-instance';
 
 export const LAZILY_MARKER = Symbol('lazily-marker');
 export interface LazilyMarker extends LazilyInstance {
     [LAZILY_MARKER]: true;
 }
+
 export function createMarker(): LazilyMarker {
     return {
         [LAZILY_MARKER]: true,
@@ -14,8 +15,9 @@ export function createMarker(): LazilyMarker {
         },
         [RELEASE]() {
             clearContext(this);
-        }
-    }
+        },
+        [INITIALIZE]() {},
+    };
 }
 
 export function isMarker(target: unknown): target is LazilyMarker {
