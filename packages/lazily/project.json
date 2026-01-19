@@ -1,0 +1,73 @@
+{
+  "name": "lazy",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/lazily/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/packages/lazily/dist"
+      ],
+      "options": {
+        "commands": [
+          "nx run lazy:build:rollup",
+          "nx run lazy:build:types"
+        ],
+        "parallel": false
+      }
+    },
+    "build:rollup": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": [
+        "{workspaceRoot}/packages/lazily/dist"
+      ],
+      "options": {
+        "outputPath": "packages/lazily/dist",
+        "main": "packages/lazily/src/index.ts",
+        "tsConfig": "packages/lazily/tsconfig.lib.json",
+        "project": "packages/lazily/package.json",
+        "entryFile": "packages/lazily/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "external": [],
+        "rollupConfig": "packages/lazily/rollup.config.ts"
+      }
+    },
+    "build:types": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/packages/lazily/dist"
+      ],
+      "options": {
+        "command": "tsc --project packages/lazily/tsconfig.lib.json --emitDeclarationOnly --declaration --declarationMap",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "packages/lazily/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "biome check packages/lazily"
+      }
+    }
+  }
+}
