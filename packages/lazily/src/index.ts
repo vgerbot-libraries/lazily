@@ -1,5 +1,5 @@
-import { create } from "./core/create";
-import { onInitialized } from "./core/onInitialized";
+import { create } from "./lib/create";
+import { onInitialized } from "./lib/onInitialized";
 
 /**
  * Hello World function
