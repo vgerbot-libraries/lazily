@@ -7,13 +7,24 @@ export function reset<T>(instance: T) {
     if (!context) {
         return;
     }
+    
+    // If released, reset to uninitialized with empty listeners
     if (context.released) {
-        throw new ReferenceError("Cannot operate with released lazily instance");
+        defineContext(instance, {
+            initialized: false,
+            released: false,
+            listeners: new Map(),
+        });
+        return;
     }
 
-    defineContext(instance, {
-        initialized: false,
-        released: false,
-        listeners: context.listeners,
-    });
+    // At this point, context is either UninitializedLazilyContext or InitializedLazilyContext
+    // Both have listeners property
+    if ('listeners' in context) {
+        defineContext(instance, {
+            initialized: false,
+            released: false,
+            listeners: context.listeners,
+        });
+    }
 }

@@ -35,12 +35,22 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
             throw new ReferenceError('Accessing released lazily variables');
         }
         const realInstance = this.factory.call(null);
+        const existingListeners = isValidContext(context) ? context.listeners : new Map();
         defineContext(this, {
-            listeners: new Map(),
+            listeners: existingListeners,
             value: realInstance,
             released: false,
             initialized: true,
         });
+        
+        // Trigger initialization callbacks
+        const listeners = existingListeners.get(INITIALIZE_EVENT_KEY);
+        if (listeners) {
+            listeners.forEach((callback) => {
+                callback(realInstance);
+            });
+        }
+        
         return realInstance;
     }
     [ON_INITIALIZE](callback: (instance: unknown) => void): () => void {
@@ -57,6 +67,12 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
             })();
 
         if (!isValidContext(context)) {
+            return () => {};
+        }
+
+        // If already initialized, call callback immediately
+        if (isInitializedContext(context)) {
+            callback(context.value);
             return () => {};
         }
 

@@ -1,27 +1,31 @@
-import { create } from "./lib/create";
-import { onInitialized } from "./lib/onInitialized";
+export { create } from "./lib/create";
+export { isInitialized } from "./lib/isInitialized";
+export { onInitialized } from "./lib/onInitialized";
+export { release } from "./lib/release";
+export { reset } from "./lib/reset";
+export { value } from "./lib/value";
 
-/**
- * Hello World function
- * @param name - Optional name to greet
- * @returns A greeting message
- */
-export function helloWorld(name?: string): string {
-  if (name) {
-    return `Hello, ${name}!`;
-  }
-  return 'Hello, World!';
-}
-
-class Editor {}
-
-class Doc {
-    declare editor:Editor;
-    constructor() {
-        this.editor = create(() => new Editor())
-        onInitialized(this.editor, (editor: Editor) => {
-            console.log('editor initialized', editor);
-        });
-
-    }
-}
+// Re-export core types and utilities for advanced usage
+export { Lazily } from "./core/Lazily";
+export { LazilyProxyHandler } from "./core/proxy-handler";
+export {
+    isLazilyInstance,
+    assertIsLazilyInstance,
+    IS_INITIALIZED,
+    RELEASE,
+    GET,
+    ON_INITIALIZE,
+    IS_LAZILY,
+    type LazilyInstance,
+} from "./core/lazily-instance";
+export {
+    getContext,
+    defineContext,
+    clearContext,
+    isInitializedContext,
+    isValidContext,
+    type LazilyContext,
+    type InitializedLazilyContext,
+    type UninitializedLazilyContext,
+    type ReleasedLazilyContext,
+} from "./core/context";
