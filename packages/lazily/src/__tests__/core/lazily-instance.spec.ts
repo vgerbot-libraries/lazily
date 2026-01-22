@@ -1,5 +1,5 @@
-import { isLazilyInstance, assertIsLazilyInstance } from '../../core/lazily-instance';
 import { Lazily } from '../../core/Lazily';
+import { assertIsLazilyInstance, isLazilyInstance } from '../../core/lazily-instance';
 import { create } from '../../lib/create';
 
 describe('lazily-instance', () => {

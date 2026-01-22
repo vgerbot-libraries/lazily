@@ -56,7 +56,7 @@ describe('context', () => {
 
     describe('isValidContext', () => {
         it('should return false for undefined', () => {
-            expect(isValidContext(undefined as any)).toBe(false);
+            expect(isValidContext(undefined as unknown)).toBe(false);
         });
 
         it('should return true for uninitialized context', () => {
@@ -67,7 +67,9 @@ describe('context', () => {
 
             const context = getContext(lazily);
             expect(context).toBeDefined();
-            expect(isValidContext(context!)).toBe(true);
+            if (context) {
+                expect(isValidContext(context)).toBe(true);
+            }
         });
 
         it('should return true for initialized context', () => {
@@ -77,7 +79,9 @@ describe('context', () => {
             const context = getContext(lazily);
 
             expect(context).toBeDefined();
-            expect(isValidContext(context!)).toBe(true);
+            if (context) {
+                expect(isValidContext(context)).toBe(true);
+            }
         });
 
         it('should return false for released context', () => {
@@ -88,7 +92,9 @@ describe('context', () => {
 
             const context = getContext(lazily);
             expect(context).toBeDefined();
-            expect(isValidContext(context!)).toBe(false);
+            if (context) {
+                expect(isValidContext(context)).toBe(false);
+            }
         });
     });
 

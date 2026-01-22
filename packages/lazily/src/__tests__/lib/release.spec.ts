@@ -1,8 +1,8 @@
-import { release } from '../../lib/release';
+import type { Lazily } from '../../core/Lazily';
+import { GET } from '../../core/lazily-instance';
 import { create } from '../../lib/create';
 import { isInitialized } from '../../lib/isInitialized';
-import { Lazily } from '../../core/Lazily';
-import { GET } from '../../core/lazily-instance';
+import { release } from '../../lib/release';
 
 describe('release', () => {
     it('should do nothing for non-lazily instance', () => {
@@ -17,7 +17,7 @@ describe('release', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize first
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         release(instance);
 
@@ -28,17 +28,17 @@ describe('release', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         // Release
         release(instance);
 
         expect(() => {
-            const lazily = instance as any as Lazily<{ value: number }>;
+            const lazily = instance as unknown as Lazily<{ value: number }>;
             lazily[GET]();
         }).toThrow(ReferenceError);
         expect(() => {
-            const lazily = instance as any as Lazily<{ value: number }>;
+            const lazily = instance as unknown as Lazily<{ value: number }>;
             lazily[GET]();
         }).toThrow('Accessing released lazily variables');
     });
@@ -51,7 +51,7 @@ describe('release', () => {
         }).not.toThrow();
 
         expect(() => {
-            const _ = (instance as any).value;
+            const _ = instance.value;
         }).toThrow(ReferenceError);
     });
 });

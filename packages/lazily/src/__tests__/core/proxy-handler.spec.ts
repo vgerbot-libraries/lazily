@@ -1,29 +1,29 @@
-import { LazilyProxyHandler } from '../../core/proxy-handler';
 import { Lazily } from '../../core/Lazily';
 import { IS_LAZILY } from '../../core/lazily-instance';
+import { LazilyProxyHandler } from '../../core/proxy-handler';
 
 describe('LazilyProxyHandler', () => {
     it('should delegate property access to instance', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number }, handler);
 
-        expect((proxy as any).value).toBe(42);
+        expect(proxy.value).toBe(42);
     });
 
     it('should delegate property setting to instance', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number }, handler);
 
-        (proxy as any).value = 100;
-        expect((proxy as any).value).toBe(100);
+        proxy.value = 100;
+        expect(proxy.value).toBe(100);
     });
 
     it('should check property existence on instance', () => {
         const lazily = new Lazily(() => ({ value: 42, name: 'test' }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number; name: string }, handler);
 
         expect('value' in proxy).toBe(true);
         expect('name' in proxy).toBe(true);
@@ -33,7 +33,7 @@ describe('LazilyProxyHandler', () => {
     it('should return own keys from instance', () => {
         const lazily = new Lazily(() => ({ value: 42, name: 'test' }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number; name: string }, handler);
 
         const keys = Object.keys(proxy);
         expect(keys).toContain('value');
@@ -43,7 +43,7 @@ describe('LazilyProxyHandler', () => {
     it('should return property descriptor from instance', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number }, handler);
 
         const descriptor = Object.getOwnPropertyDescriptor(proxy, 'value');
         expect(descriptor).toBeDefined();
@@ -54,7 +54,7 @@ describe('LazilyProxyHandler', () => {
         class TestClass {}
         const lazily = new Lazily(() => new TestClass());
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as TestClass, handler);
 
         const proto = Object.getPrototypeOf(proxy);
         expect(proto).toBe(TestClass.prototype);
@@ -63,16 +63,16 @@ describe('LazilyProxyHandler', () => {
     it('should preserve target properties', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number }, handler);
 
         // IS_LAZILY should be accessible
-        expect((proxy as any)[IS_LAZILY]).toBe(true);
+        expect((proxy as Lazily<{ value: number }>)[IS_LAZILY]).toBe(true);
     });
 
     it('should not allow setting target properties', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as any, handler);
+        const proxy = new Proxy(lazily as { value: number }, handler);
 
         // Setting a property that exists on target should return false
         const result = Reflect.set(proxy, IS_LAZILY, false, proxy);

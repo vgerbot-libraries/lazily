@@ -48,12 +48,12 @@ describe('integration tests', () => {
         const outer = create(() => new Outer());
 
         expect(isInitialized(outer)).toBe(false);
-        expect(isInitialized((outer as any).inner)).toBe(false);
+        expect(isInitialized(outer.inner)).toBe(false);
 
-        const value = (outer as any).inner.value;
+        const value = outer.inner.value;
 
         expect(isInitialized(outer)).toBe(true);
-        expect(isInitialized((outer as any).inner)).toBe(true);
+        expect(isInitialized(outer.inner)).toBe(true);
         expect(value).toBe(1);
     });
 
@@ -66,14 +66,14 @@ describe('integration tests', () => {
 
         expect(callCount).toBe(0);
 
-        const value1 = (instance as any).value;
+        const value1 = instance.value;
         expect(value1).toBe(1);
         expect(callCount).toBe(1);
 
         release(instance);
         reset(instance);
 
-        const value2 = (instance as any).value;
+        const value2 = instance.value;
         expect(value2).toBe(2);
         expect(callCount).toBe(2);
     });
@@ -91,7 +91,7 @@ describe('integration tests', () => {
 
         unsubscribe2();
 
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         expect(callback1).toHaveBeenCalledTimes(1);
         expect(callback2).not.toHaveBeenCalled();

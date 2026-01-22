@@ -1,17 +1,17 @@
 import {
+    type UninitializedLazilyContext,
     defineContext,
     getContext,
     isInitializedContext,
     isValidContext,
-    UninitializedLazilyContext,
 } from './context';
 import {
     GET,
     IS_INITIALIZED,
-    LazilyInstance,
+    IS_LAZILY,
+    type LazilyInstance,
     ON_INITIALIZE,
     RELEASE,
-    IS_LAZILY,
 } from './lazily-instance';
 const INITIALIZE_EVENT_KEY = Symbol('initialize-event');
 
@@ -46,9 +46,9 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
         // Trigger initialization callbacks
         const listeners = existingListeners.get(INITIALIZE_EVENT_KEY);
         if (listeners) {
-            listeners.forEach((callback) => {
+            for (const callback of listeners) {
                 callback(realInstance);
-            });
+            }
         }
 
         return realInstance;

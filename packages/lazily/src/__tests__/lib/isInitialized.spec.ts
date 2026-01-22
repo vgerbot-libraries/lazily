@@ -1,5 +1,5 @@
-import { isInitialized } from '../../lib/isInitialized';
 import { create } from '../../lib/create';
+import { isInitialized } from '../../lib/isInitialized';
 import { release } from '../../lib/release';
 
 describe('isInitialized', () => {
@@ -21,7 +21,7 @@ describe('isInitialized', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Access the instance to initialize it
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         expect(isInitialized(instance)).toBe(true);
     });
@@ -30,7 +30,7 @@ describe('isInitialized', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         // Release
         release(instance);

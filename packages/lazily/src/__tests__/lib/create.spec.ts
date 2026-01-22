@@ -1,8 +1,8 @@
-import { create } from '../../lib/create';
-import { isLazilyInstance } from '../../core/lazily-instance';
 import { Lazily } from '../../core/Lazily';
-import { LazilyProxyHandler } from '../../core/proxy-handler';
+import { isLazilyInstance } from '../../core/lazily-instance';
 import { IS_LAZILY } from '../../core/lazily-instance';
+import { LazilyProxyHandler } from '../../core/proxy-handler';
+import { create } from '../../lib/create';
 
 describe('create', () => {
     it('should create a lazily instance', () => {
@@ -19,7 +19,7 @@ describe('create', () => {
 
         expect(factory).not.toHaveBeenCalled();
 
-        const result = (instance as any).value;
+        const result = instance.value;
         expect(factory).toHaveBeenCalledTimes(1);
         expect(result).toBe(42);
     });
@@ -28,9 +28,9 @@ describe('create', () => {
         const factory = jest.fn(() => ({ value: 42 }));
         const instance = create(factory);
 
-        const value1 = (instance as any).value;
-        const value2 = (instance as any).value;
-        const value3 = (instance as any).value;
+        const value1 = instance.value;
+        const value2 = instance.value;
+        const value3 = instance.value;
 
         expect(factory).toHaveBeenCalledTimes(1);
         expect(value1).toBe(42);
@@ -55,16 +55,16 @@ describe('create', () => {
 
         const instance = create(() => new TestClass());
 
-        expect((instance as any).value).toBe(100);
-        expect((instance as any).name).toBe('test');
-        expect((instance as any).getValue()).toBe(100);
+        expect(instance.value).toBe(100);
+        expect(instance.name).toBe('test');
+        expect(instance.getValue()).toBe(100);
     });
 
     it('should handle property assignment', () => {
         const instance = create(() => ({ value: 42 }));
 
-        (instance as any).value = 100;
-        expect((instance as any).value).toBe(100);
+        instance.value = 100;
+        expect(instance.value).toBe(100);
     });
 
     it('should handle property existence checks', () => {
@@ -101,7 +101,7 @@ describe('create', () => {
 
     it('should preserve target properties', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
-        const proxy = new Proxy(lazily as any, new LazilyProxyHandler());
+        const proxy = new Proxy(lazily as { value: number }, new LazilyProxyHandler());
 
         // IS_LAZILY should be accessible directly
         expect(proxy[IS_LAZILY]).toBe(true);

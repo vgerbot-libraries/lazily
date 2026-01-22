@@ -1,12 +1,12 @@
-import { onInitialized } from '../../lib/onInitialized';
 import { create } from '../../lib/create';
+import { onInitialized } from '../../lib/onInitialized';
 
 describe('onInitialized', () => {
     it('should throw error for non-lazily instance', () => {
         const regularObject = { value: 42 };
 
         expect(() => {
-            onInitialized(regularObject as any, () => {});
+            onInitialized(regularObject as object, () => {});
         }).toThrow(TypeError);
     });
 
@@ -19,7 +19,7 @@ describe('onInitialized', () => {
         expect(callback).not.toHaveBeenCalled();
 
         // Access to initialize
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith({ value: 42 });
@@ -30,7 +30,7 @@ describe('onInitialized', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize first
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         onInitialized(instance, callback);
 
@@ -46,7 +46,7 @@ describe('onInitialized', () => {
         onInitialized(instance, callback1);
         onInitialized(instance, callback2);
 
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         expect(callback1).toHaveBeenCalledTimes(1);
         expect(callback2).toHaveBeenCalledTimes(1);
@@ -60,7 +60,7 @@ describe('onInitialized', () => {
 
         unsubscribe();
 
-        const _ = (instance as any).value;
+        const _ = instance.value;
 
         expect(callback).not.toHaveBeenCalled();
     });
@@ -74,7 +74,7 @@ describe('onInitialized', () => {
         onInitialized(instance, errorCallback);
 
         expect(() => {
-            const _ = (instance as any).value;
+            const _ = instance.value;
         }).toThrow('Callback error');
     });
 });

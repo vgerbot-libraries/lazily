@@ -1,15 +1,15 @@
-import { reset } from '../../lib/reset';
 import { create } from '../../lib/create';
 import { isInitialized } from '../../lib/isInitialized';
-import { release } from '../../lib/release';
 import { onInitialized } from '../../lib/onInitialized';
+import { release } from '../../lib/release';
+import { reset } from '../../lib/reset';
 
 describe('reset', () => {
     it('should throw error for non-lazily instance', () => {
         const regularObject = { value: 42 };
 
         expect(() => {
-            reset(regularObject as any);
+            reset(regularObject as unknown);
         }).toThrow(TypeError);
     });
 
@@ -17,7 +17,7 @@ describe('reset', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize
-        const _ = (instance as any).value;
+        const _ = instance.value;
         expect(isInitialized(instance)).toBe(true);
 
         // Reset
@@ -25,7 +25,7 @@ describe('reset', () => {
         expect(isInitialized(instance)).toBe(false);
 
         // Should reinitialize on next access
-        const value = (instance as any).value;
+        const value = instance.value;
         expect(value).toBe(42);
     });
 
@@ -36,14 +36,14 @@ describe('reset', () => {
         onInitialized(instance, callback);
 
         // Initialize
-        const _ = (instance as any).value;
+        const _ = instance.value;
         expect(callback).toHaveBeenCalledTimes(1);
 
         // Reset
         reset(instance);
 
         // Reinitialize
-        const __ = (instance as any).value;
+        const __ = instance.value;
         expect(callback).toHaveBeenCalledTimes(2);
     });
 
@@ -51,7 +51,7 @@ describe('reset', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize and release
-        const _ = (instance as any).value;
+        const _ = instance.value;
         release(instance);
 
         // Should be able to reset released instance
@@ -62,7 +62,7 @@ describe('reset', () => {
         expect(isInitialized(instance)).toBe(false);
 
         // Should be able to reinitialize after reset
-        const value = (instance as any).value;
+        const value = instance.value;
         expect(value).toBe(42);
     });
 

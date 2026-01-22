@@ -1,4 +1,4 @@
-import { Lazily } from './Lazily';
+import type { Lazily } from './Lazily';
 import { GET } from './lazily-instance';
 
 export class LazilyProxyHandler<T extends object> implements ProxyHandler<T> {

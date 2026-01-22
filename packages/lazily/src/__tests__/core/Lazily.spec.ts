@@ -1,5 +1,5 @@
 import { Lazily } from '../../core/Lazily';
-import { IS_INITIALIZED, RELEASE, GET, ON_INITIALIZE, IS_LAZILY } from '../../core/lazily-instance';
+import { GET, IS_INITIALIZED, IS_LAZILY, ON_INITIALIZE, RELEASE } from '../../core/lazily-instance';
 
 describe('Lazily', () => {
     describe('IS_LAZILY', () => {

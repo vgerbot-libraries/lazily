@@ -1,6 +1,6 @@
 import { Lazily } from '../core/Lazily';
-import { LazilyProxyHandler } from '../core/proxy-handler';
 import { setProxyTarget } from '../core/context';
+import { LazilyProxyHandler } from '../core/proxy-handler';
 
 export function create<T extends object>(factory: () => T): T {
     const lazily = new Lazily<T>(factory);
