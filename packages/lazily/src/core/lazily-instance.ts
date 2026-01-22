@@ -1,5 +1,5 @@
 export const IS_INITIALIZED = Symbol('is-initialized');
-export const RELEASE = Symbol('release');
+export const INVALIDATE = Symbol('invalidate');
 export const GET = Symbol('get');
 export const ON_INITIALIZE = Symbol('on-initialize');
 export const TRIGGER_INITIALIZE_EVENT = Symbol('trigger-initialize-event');
@@ -8,7 +8,7 @@ export const IS_LAZILY = Symbol('isLazily');
 export interface LazilyInstance<T extends object> {
     [IS_LAZILY]: true;
     [IS_INITIALIZED](): boolean;
-    [RELEASE](): void;
+    [INVALIDATE](): void;
     [GET](): T;
     [ON_INITIALIZE](callback: (instance: T) => void): () => void;
 }

@@ -9,10 +9,10 @@ export function reset<T>(instance: T) {
     }
 
     // If released, reset to uninitialized with empty listeners
-    if (context.released) {
+    if (context.invalidated) {
         defineContext(instance, {
             initialized: false,
-            released: false,
+            invalidated: false,
             listeners: new Map(),
         });
         return;
@@ -23,7 +23,7 @@ export function reset<T>(instance: T) {
     if ('listeners' in context) {
         defineContext(instance, {
             initialized: false,
-            released: false,
+            invalidated: false,
             listeners: context.listeners,
         });
     }

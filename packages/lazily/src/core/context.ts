@@ -2,19 +2,19 @@ type ListenersMap = Map<unknown, Set<(...args: unknown[]) => void>>;
 export type InitializedLazilyContext<T extends object> = {
     listeners: ListenersMap;
     initialized: true;
-    released: false;
+    invalidated: false;
     value: T;
 };
 export type UninitializedLazilyContext = {
     listeners: ListenersMap;
     initialized: false;
-    released: false;
+    invalidated: false;
 };
-export type ReleasedLazilyContext = { released: true };
+export type InvalidatedLazilyContext = { invalidated: true };
 export type LazilyContext<T extends object> =
     | UninitializedLazilyContext
     | InitializedLazilyContext<T>
-    | ReleasedLazilyContext;
+    | InvalidatedLazilyContext;
 const contexts = new WeakMap<object, LazilyContext<object>>();
 const proxyToTarget = new WeakMap<object, object>();
 
@@ -54,7 +54,7 @@ export function isInitializedContext<T extends object>(
     if (!context) {
         return false;
     }
-    if (context.released) {
+    if (context.invalidated) {
         return false;
     }
     return 'initialized' in context && context.initialized === true;
@@ -65,5 +65,5 @@ export function isValidContext<T extends object>(
     if (!context) {
         return false;
     }
-    return !context.released;
+    return !context.invalidated;
 }

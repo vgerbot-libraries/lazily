@@ -1,7 +1,7 @@
 export { create } from './lib/create';
 export { isInitialized } from './lib/isInitialized';
 export { onInitialized } from './lib/onInitialized';
-export { release } from './lib/release';
+export { invalidate } from './lib/invalidate';
 export { reset } from './lib/reset';
 export { value } from './lib/value';
 
@@ -12,7 +12,7 @@ export {
     isLazilyInstance,
     assertIsLazilyInstance,
     IS_INITIALIZED,
-    RELEASE,
+    INVALIDATE as RELEASE,
     GET,
     ON_INITIALIZE,
     IS_LAZILY,
@@ -27,5 +27,5 @@ export {
     type LazilyContext,
     type InitializedLazilyContext,
     type UninitializedLazilyContext,
-    type ReleasedLazilyContext,
+    type InvalidatedLazilyContext as ReleasedLazilyContext,
 } from './core/context';

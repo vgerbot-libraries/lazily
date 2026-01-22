@@ -11,7 +11,7 @@ import {
     IS_LAZILY,
     type LazilyInstance,
     ON_INITIALIZE,
-    RELEASE,
+    INVALIDATE,
 } from './lazily-instance';
 const INITIALIZE_EVENT_KEY = Symbol('initialize-event');
 
@@ -21,9 +21,9 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
     [IS_INITIALIZED](): boolean {
         return isInitializedContext(getContext(this));
     }
-    [RELEASE](): void {
+    [INVALIDATE](): void {
         defineContext(this, {
-            released: true,
+            invalidated: true,
         });
     }
     [GET](): T {
@@ -31,15 +31,15 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
         if (isInitializedContext(context)) {
             return context.value;
         }
-        if (context?.released) {
-            throw new ReferenceError('Accessing released lazily variables');
+        if (context?.invalidated) {
+            throw new ReferenceError('Accessing invalidated lazily variables');
         }
         const realInstance = this.factory.call(null);
-        const existingListeners = isValidContext(context) ? context.listeners : new Map();
+        const existingListeners = context && isValidContext(context) ? context.listeners : new Map();
         defineContext(this, {
             listeners: existingListeners,
             value: realInstance,
-            released: false,
+            invalidated: false,
             initialized: true,
         });
 
@@ -53,13 +53,13 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
 
         return realInstance;
     }
-    [ON_INITIALIZE](callback: (instance: unknown) => void): () => void {
+    [ON_INITIALIZE](callback: (instance: T) => void): () => void {
         const context =
             getContext<T>(this) ??
             (() => {
                 const ctx = {
                     listeners: new Map(),
-                    released: false,
+                    invalidated: false,
                     initialized: false,
                 } satisfies UninitializedLazilyContext;
                 defineContext(this, ctx);
@@ -84,7 +84,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
                 return set;
             })();
 
-        const listener = callback.bind(null);
+        const listener = callback.bind(null) as (...args: unknown[]) => void;
         listeners.add(listener);
         return () => {
             listeners.delete(listener);

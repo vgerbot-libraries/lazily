@@ -1,6 +1,6 @@
 import { getContext, clearContext, isInitializedContext, isValidContext } from '../../core/context';
 import { Lazily } from '../../core/Lazily';
-import { GET, RELEASE, ON_INITIALIZE } from '../../core/lazily-instance';
+import { GET, INVALIDATE, ON_INITIALIZE } from '../../core/lazily-instance';
 
 describe('context', () => {
     describe('getContext', () => {
@@ -43,11 +43,11 @@ describe('context', () => {
             expect(isInitializedContext(context)).toBe(true);
         });
 
-        it('should return false for released context', () => {
+        it('should return false for invalidated context', () => {
             const lazily = new Lazily(() => ({ value: 42 }));
 
             lazily[GET]();
-            lazily[RELEASE]();
+            lazily[INVALIDATE]();
 
             const context = getContext(lazily);
             expect(isInitializedContext(context)).toBe(false);
@@ -84,11 +84,11 @@ describe('context', () => {
             }
         });
 
-        it('should return false for released context', () => {
+        it('should return false for invalidated context', () => {
             const lazily = new Lazily(() => ({ value: 42 }));
 
             lazily[GET]();
-            lazily[RELEASE]();
+            lazily[INVALIDATE]();
 
             const context = getContext(lazily);
             expect(context).toBeDefined();

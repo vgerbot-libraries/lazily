@@ -1,5 +1,5 @@
 import { Lazily } from '../../core/Lazily';
-import { GET, IS_INITIALIZED, IS_LAZILY, ON_INITIALIZE, RELEASE } from '../../core/lazily-instance';
+import { GET, IS_INITIALIZED, IS_LAZILY, ON_INITIALIZE, INVALIDATE } from '../../core/lazily-instance';
 
 describe('Lazily', () => {
     describe('IS_LAZILY', () => {
@@ -25,11 +25,11 @@ describe('Lazily', () => {
             expect(lazily[IS_INITIALIZED]()).toBe(true);
         });
 
-        it('should return false for released instance', () => {
+        it('should return false for invalidated instance', () => {
             const lazily = new Lazily(() => ({ value: 42 }));
 
             lazily[GET]();
-            lazily[RELEASE]();
+            lazily[INVALIDATE]();
 
             expect(lazily[IS_INITIALIZED]()).toBe(false);
         });
@@ -55,27 +55,27 @@ describe('Lazily', () => {
             expect(result1).toBe(result2);
         });
 
-        it('should throw error when accessing released instance', () => {
+        it('should throw error when accessing invalidated instance', () => {
             const lazily = new Lazily(() => ({ value: 42 }));
 
             lazily[GET]();
-            lazily[RELEASE]();
+            lazily[INVALIDATE]();
 
             expect(() => {
                 lazily[GET]();
             }).toThrow(ReferenceError);
             expect(() => {
                 lazily[GET]();
-            }).toThrow('Accessing released lazily variables');
+            }).toThrow('Accessing invalidated lazily variables');
         });
     });
 
-    describe('RELEASE', () => {
-        it('should mark instance as released', () => {
+    describe('invalidate', () => {
+        it('should mark instance as invalidated', () => {
             const lazily = new Lazily(() => ({ value: 42 }));
 
             lazily[GET]();
-            lazily[RELEASE]();
+            lazily[INVALIDATE]();
 
             expect(lazily[IS_INITIALIZED]()).toBe(false);
         });
@@ -84,7 +84,7 @@ describe('Lazily', () => {
             const lazily = new Lazily(() => ({ value: 42 }));
 
             expect(() => {
-                lazily[RELEASE]();
+                lazily[INVALIDATE]();
             }).not.toThrow();
         });
     });
@@ -140,19 +140,19 @@ describe('Lazily', () => {
             expect(callback2).toHaveBeenCalledTimes(1);
         });
 
-        it('should not register callback for released instance', () => {
+        it('should not register callback for invalidated instance', () => {
             const callback = jest.fn();
             const lazily = new Lazily(() => ({ value: 42 }));
 
             lazily[GET]();
-            lazily[RELEASE]();
+            lazily[INVALIDATE]();
 
             const unsubscribe = lazily[ON_INITIALIZE](callback);
 
             expect(unsubscribe).toBeDefined();
             expect(typeof unsubscribe).toBe('function');
 
-            // Callback should not be called since instance is released
+            // Callback should not be called since instance is invalidated
             expect(callback).not.toHaveBeenCalled();
         });
     });

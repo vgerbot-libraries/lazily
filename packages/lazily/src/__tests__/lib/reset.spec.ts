@@ -1,7 +1,7 @@
 import { create } from '../../lib/create';
 import { isInitialized } from '../../lib/isInitialized';
 import { onInitialized } from '../../lib/onInitialized';
-import { release } from '../../lib/release';
+import { invalidate } from '../../lib/invalidate';
 import { reset } from '../../lib/reset';
 
 describe('reset', () => {
@@ -47,14 +47,14 @@ describe('reset', () => {
         expect(callback).toHaveBeenCalledTimes(2);
     });
 
-    it('should allow resetting released instance', () => {
+    it('should allow resetting invalidated instance', () => {
         const instance = create(() => ({ value: 42 }));
 
-        // Initialize and release
+        // Initialize and invalidate
         const _ = instance.value;
-        release(instance);
+        invalidate(instance);
 
-        // Should be able to reset released instance
+        // Should be able to reset invalidated instance
         expect(() => {
             reset(instance);
         }).not.toThrow();

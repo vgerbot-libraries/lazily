@@ -1,4 +1,4 @@
-import { create, isInitialized, onInitialized, release, reset } from '../index';
+import { create, isInitialized, onInitialized, invalidate, reset } from '../index';
 
 describe('integration tests', () => {
     it('should work with class instances', () => {
@@ -57,7 +57,7 @@ describe('integration tests', () => {
         expect(value).toBe(1);
     });
 
-    it('should handle release and re-initialization cycle', () => {
+    it('should handle invalidate and re-initialization cycle', () => {
         let callCount = 0;
         const instance = create(() => {
             callCount++;
@@ -70,7 +70,7 @@ describe('integration tests', () => {
         expect(value1).toBe(1);
         expect(callCount).toBe(1);
 
-        release(instance);
+        invalidate(instance);
         reset(instance);
 
         const value2 = instance.value;

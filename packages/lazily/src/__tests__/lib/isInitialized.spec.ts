@@ -1,6 +1,6 @@
 import { create } from '../../lib/create';
 import { isInitialized } from '../../lib/isInitialized';
-import { release } from '../../lib/release';
+import { invalidate } from '../../lib/invalidate';
 
 describe('isInitialized', () => {
     it('should return true for non-lazily instances', () => {
@@ -26,14 +26,14 @@ describe('isInitialized', () => {
         expect(isInitialized(instance)).toBe(true);
     });
 
-    it('should return false for released lazily instance', () => {
+    it('should return false for invalidated lazily instance', () => {
         const instance = create(() => ({ value: 42 }));
 
         // Initialize
         const _ = instance.value;
 
-        // Release
-        release(instance);
+        // invalidate
+        invalidate(instance);
 
         expect(isInitialized(instance)).toBe(false);
     });
