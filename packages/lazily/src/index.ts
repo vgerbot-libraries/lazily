@@ -1,13 +1,13 @@
-export { create } from "./lib/create";
-export { isInitialized } from "./lib/isInitialized";
-export { onInitialized } from "./lib/onInitialized";
-export { release } from "./lib/release";
-export { reset } from "./lib/reset";
-export { value } from "./lib/value";
+export { create } from './lib/create';
+export { isInitialized } from './lib/isInitialized';
+export { onInitialized } from './lib/onInitialized';
+export { release } from './lib/release';
+export { reset } from './lib/reset';
+export { value } from './lib/value';
 
 // Re-export core types and utilities for advanced usage
-export { Lazily } from "./core/Lazily";
-export { LazilyProxyHandler } from "./core/proxy-handler";
+export { Lazily } from './core/Lazily';
+export { LazilyProxyHandler } from './core/proxy-handler';
 export {
     isLazilyInstance,
     assertIsLazilyInstance,
@@ -17,7 +17,7 @@ export {
     ON_INITIALIZE,
     IS_LAZILY,
     type LazilyInstance,
-} from "./core/lazily-instance";
+} from './core/lazily-instance';
 export {
     getContext,
     defineContext,
@@ -28,4 +28,4 @@ export {
     type InitializedLazilyContext,
     type UninitializedLazilyContext,
     type ReleasedLazilyContext,
-} from "./core/context";
+} from './core/context';

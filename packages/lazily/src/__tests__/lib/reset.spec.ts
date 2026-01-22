@@ -76,4 +76,3 @@ describe('reset', () => {
         expect(isInitialized(instance)).toBe(false);
     });
 });
-

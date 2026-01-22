@@ -42,4 +42,3 @@ describe('value', () => {
         expect(result1).toBe(result2);
     });
 });
-

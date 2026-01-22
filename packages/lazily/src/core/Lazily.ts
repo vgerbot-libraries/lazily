@@ -4,7 +4,7 @@ import {
     isInitializedContext,
     isValidContext,
     UninitializedLazilyContext,
-} from "./context";
+} from './context';
 import {
     GET,
     IS_INITIALIZED,
@@ -12,8 +12,8 @@ import {
     ON_INITIALIZE,
     RELEASE,
     IS_LAZILY,
-} from "./lazily-instance";
-const INITIALIZE_EVENT_KEY = Symbol("initialize-event");
+} from './lazily-instance';
+const INITIALIZE_EVENT_KEY = Symbol('initialize-event');
 
 export class Lazily<T extends object> implements LazilyInstance<T> {
     constructor(private readonly factory: () => T) {}
@@ -42,7 +42,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
             released: false,
             initialized: true,
         });
-        
+
         // Trigger initialization callbacks
         const listeners = existingListeners.get(INITIALIZE_EVENT_KEY);
         if (listeners) {
@@ -50,7 +50,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
                 callback(realInstance);
             });
         }
-        
+
         return realInstance;
     }
     [ON_INITIALIZE](callback: (instance: unknown) => void): () => void {
@@ -79,7 +79,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
         const listeners =
             context.listeners.get(INITIALIZE_EVENT_KEY) ??
             (() => {
-                const set = new Set<(...args: unknown[])=>void>();
+                const set = new Set<(...args: unknown[]) => void>();
                 context.listeners.set(INITIALIZE_EVENT_KEY, set);
                 return set;
             })();

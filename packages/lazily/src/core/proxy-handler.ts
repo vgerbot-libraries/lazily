@@ -36,5 +36,4 @@ export class LazilyProxyHandler<T extends object> implements ProxyHandler<T> {
         const instance = (target as Lazily<T>)[GET]();
         return Reflect.getPrototypeOf(instance);
     }
-
 }

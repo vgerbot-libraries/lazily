@@ -107,4 +107,3 @@ describe('create', () => {
         expect(proxy[IS_LAZILY]).toBe(true);
     });
 });
-

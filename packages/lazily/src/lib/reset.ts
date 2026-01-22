@@ -1,5 +1,5 @@
-import { defineContext, getContext } from "../core/context";
-import { assertIsLazilyInstance } from "../core/lazily-instance";
+import { defineContext, getContext } from '../core/context';
+import { assertIsLazilyInstance } from '../core/lazily-instance';
 
 export function reset<T>(instance: T) {
     assertIsLazilyInstance(instance);
@@ -7,7 +7,7 @@ export function reset<T>(instance: T) {
     if (!context) {
         return;
     }
-    
+
     // If released, reset to uninitialized with empty listeners
     if (context.released) {
         defineContext(instance, {

@@ -79,4 +79,3 @@ describe('LazilyProxyHandler', () => {
         expect(result).toBe(false);
     });
 });
-

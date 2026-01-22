@@ -98,4 +98,3 @@ describe('integration tests', () => {
         expect(callback3).toHaveBeenCalledTimes(1);
     });
 });
-

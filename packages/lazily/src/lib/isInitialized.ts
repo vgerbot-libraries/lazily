@@ -1,5 +1,5 @@
-import { getContext, isInitializedContext } from "../core/context";
-import { isLazilyInstance } from "../core/lazily-instance";
+import { getContext, isInitializedContext } from '../core/context';
+import { isLazilyInstance } from '../core/lazily-instance';
 
 export function isInitialized(instance: unknown) {
     if (!isLazilyInstance(instance)) {

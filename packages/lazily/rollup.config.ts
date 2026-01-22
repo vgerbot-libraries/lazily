@@ -9,29 +9,29 @@ const currentFile = fileURLToPath(import.meta.url);
 const currentDir = dirname(currentFile);
 
 export default defineConfig({
-  input: join(currentDir, 'src/index.ts'),
-  output: [
-    {
-      file: join(currentDir, 'dist/index.cjs'),
-      format: 'cjs',
-      sourcemap: true,
-    },
-    {
-      file: join(currentDir, 'dist/index.esm.js'),
-      format: 'esm',
-      sourcemap: true,
-    },
-  ],
-  plugins: [
-    nodeResolve({
-      preferBuiltins: true,
-    }),
-    commonjs(),
-    esbuild({
-      target: 'es2022',
-      minify: false,
-      tsconfig: join(currentDir, 'tsconfig.lib.json'),
-    }),
-  ],
-  external: [],
+    input: join(currentDir, 'src/index.ts'),
+    output: [
+        {
+            file: join(currentDir, 'dist/index.cjs'),
+            format: 'cjs',
+            sourcemap: true,
+        },
+        {
+            file: join(currentDir, 'dist/index.esm.js'),
+            format: 'esm',
+            sourcemap: true,
+        },
+    ],
+    plugins: [
+        nodeResolve({
+            preferBuiltins: true,
+        }),
+        commonjs(),
+        esbuild({
+            target: 'es2022',
+            minify: false,
+            tsconfig: join(currentDir, 'tsconfig.lib.json'),
+        }),
+    ],
+    external: [],
 });

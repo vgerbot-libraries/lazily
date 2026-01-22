@@ -44,4 +44,3 @@ describe('lazily-instance', () => {
         });
     });
 });
-

@@ -11,7 +11,10 @@ export type UninitializedLazilyContext = {
     released: false;
 };
 export type ReleasedLazilyContext = { released: true };
-export type LazilyContext<T extends object> = UninitializedLazilyContext | InitializedLazilyContext<T> | ReleasedLazilyContext;
+export type LazilyContext<T extends object> =
+    | UninitializedLazilyContext
+    | InitializedLazilyContext<T>
+    | ReleasedLazilyContext;
 const contexts = new WeakMap<object, LazilyContext<object>>();
 const proxyToTarget = new WeakMap<object, object>();
 
@@ -56,10 +59,11 @@ export function isInitializedContext<T extends object>(
     }
     return 'initialized' in context && context.initialized === true;
 }
-export function isValidContext<T extends object>(context: LazilyContext<T>): context is UninitializedLazilyContext | InitializedLazilyContext<T> {
+export function isValidContext<T extends object>(
+    context: LazilyContext<T>
+): context is UninitializedLazilyContext | InitializedLazilyContext<T> {
     if (!context) {
         return false;
     }
     return !context.released;
 }
-
