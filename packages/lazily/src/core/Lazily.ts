@@ -6,6 +6,10 @@ import {
     isValidContext,
 } from './context';
 import {
+    InvalidatedLazilyError,
+    LazilyFactoryError,
+} from './errors';
+import {
     GET,
     IS_INITIALIZED,
     IS_LAZILY,
@@ -32,9 +36,20 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
             return context.value;
         }
         if (context?.invalidated) {
-            throw new ReferenceError('Accessing invalidated lazily variables');
+            throw new InvalidatedLazilyError({
+                instanceType: this.constructor.name,
+            });
         }
-        const realInstance = this.factory.call(null);
+
+        let realInstance: T;
+        try {
+            realInstance = this.factory.call(null);
+        } catch (error) {
+            throw new LazilyFactoryError(error, {
+                instanceType: this.constructor.name,
+            });
+        }
+
         const existingListeners = context && isValidContext(context) ? context.listeners : new Map();
         defineContext(this, {
             listeners: existingListeners,
@@ -47,7 +62,16 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
         const listeners = existingListeners.get(INITIALIZE_EVENT_KEY);
         if (listeners) {
             for (const callback of listeners) {
-                callback(realInstance);
+                try {
+                    callback(realInstance);
+                } catch (error) {
+                    // Log callback errors but don't fail initialization
+                    // This allows other callbacks to still execute
+                    console.error(
+                        '[Lazily] Error in initialization callback:',
+                        error instanceof Error ? error.message : String(error)
+                    );
+                }
             }
         }
 

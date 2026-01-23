@@ -1,6 +1,7 @@
 import { Lazily } from '../../core/Lazily';
 import { assertIsLazilyInstance, isLazilyInstance } from '../../core/lazily-instance';
 import { create } from '../../lib/create';
+import { NotLazilyInstanceError } from '../../core/errors';
 
 describe('lazily-instance', () => {
     describe('isLazilyInstance', () => {
@@ -37,10 +38,10 @@ describe('lazily-instance', () => {
         it('should throw for non-lazily instance', () => {
             expect(() => {
                 assertIsLazilyInstance({ value: 42 });
-            }).toThrow(TypeError);
+            }).toThrow(NotLazilyInstanceError);
             expect(() => {
                 assertIsLazilyInstance({ value: 42 });
-            }).toThrow('The specified instance is not lazily!');
+            }).toThrow('Expected a lazily instance');
         });
     });
 });

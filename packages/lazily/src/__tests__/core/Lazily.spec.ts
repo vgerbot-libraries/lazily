@@ -1,5 +1,6 @@
 import { Lazily } from '../../core/Lazily';
 import { GET, IS_INITIALIZED, IS_LAZILY, ON_INITIALIZE, INVALIDATE } from '../../core/lazily-instance';
+import { InvalidatedLazilyError, LazilyFactoryError } from '../../core/errors';
 
 describe('Lazily', () => {
     describe('IS_LAZILY', () => {
@@ -63,10 +64,24 @@ describe('Lazily', () => {
 
             expect(() => {
                 lazily[GET]();
-            }).toThrow(ReferenceError);
+            }).toThrow(InvalidatedLazilyError);
             expect(() => {
                 lazily[GET]();
-            }).toThrow('Accessing invalidated lazily variables');
+            }).toThrow('Cannot access an invalidated lazily instance');
+        });
+
+        it('should throw factory error when factory throws', () => {
+            const factoryError = new Error('Factory failed');
+            const lazily = new Lazily(() => {
+                throw factoryError;
+            });
+
+            expect(() => {
+                lazily[GET]();
+            }).toThrow(LazilyFactoryError);
+            expect(() => {
+                lazily[GET]();
+            }).toThrow('Factory function threw an error during lazy initialization');
         });
     });
 

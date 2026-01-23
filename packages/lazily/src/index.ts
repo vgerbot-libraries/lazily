@@ -5,3 +5,12 @@ export { invalidate } from './lib/invalidate';
 export { reset } from './lib/reset';
 export { value } from './lib/value';
 export { wire } from './lib/wire';
+
+// Export error classes for programmatic error handling
+export {
+    LazilyError,
+    InvalidatedLazilyError,
+    NotLazilyInstanceError,
+    LazilyFactoryError,
+    LazilyErrorCode,
+} from './core/errors';

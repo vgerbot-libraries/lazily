@@ -3,6 +3,7 @@ import { isInitialized } from '../../lib/isInitialized';
 import { onInitialized } from '../../lib/onInitialized';
 import { invalidate } from '../../lib/invalidate';
 import { reset } from '../../lib/reset';
+import { NotLazilyInstanceError } from '../../core/errors';
 
 describe('reset', () => {
     it('should throw error for non-lazily instance', () => {
@@ -10,7 +11,10 @@ describe('reset', () => {
 
         expect(() => {
             reset(regularObject as unknown);
-        }).toThrow(TypeError);
+        }).toThrow(NotLazilyInstanceError);
+        expect(() => {
+            reset(regularObject as unknown);
+        }).toThrow('Expected a lazily instance');
     });
 
     it('should reset initialized instance to uninitialized', () => {

@@ -1,3 +1,5 @@
+import { NotLazilyInstanceError } from './errors';
+
 export const IS_INITIALIZED = Symbol('is-initialized');
 export const INVALIDATE = Symbol('invalidate');
 export const GET = Symbol('get');
@@ -26,6 +28,8 @@ export function assertIsLazilyInstance(
     instance: unknown
 ): asserts instance is LazilyInstance<object> {
     if (!isLazilyInstance(instance)) {
-        throw new TypeError('The specified instance is not lazily!');
+        throw new NotLazilyInstanceError(instance, {
+            functionName: 'assertIsLazilyInstance',
+        });
     }
 }

@@ -3,6 +3,7 @@ import { GET } from '../../core/lazily-instance';
 import { create } from '../../lib/create';
 import { isInitialized } from '../../lib/isInitialized';
 import { invalidate } from '../../lib/invalidate';
+import { InvalidatedLazilyError } from '../../core/errors';
 
 describe('invalidate', () => {
     it('should do nothing for non-lazily instance', () => {
@@ -36,11 +37,11 @@ describe('invalidate', () => {
         expect(() => {
             const lazily = instance as unknown as Lazily<{ value: number }>;
             lazily[GET]();
-        }).toThrow(ReferenceError);
+        }).toThrow(InvalidatedLazilyError);
         expect(() => {
             const lazily = instance as unknown as Lazily<{ value: number }>;
             lazily[GET]();
-        }).toThrow('Accessing invalidated lazily variables');
+        }).toThrow('Cannot access an invalidated lazily instance');
     });
 
     it('should allow releasing uninitialized instance', () => {
@@ -52,6 +53,6 @@ describe('invalidate', () => {
 
         expect(() => {
             const _ = instance.value;
-        }).toThrow(ReferenceError);
+        }).toThrow(InvalidatedLazilyError);
     });
 });

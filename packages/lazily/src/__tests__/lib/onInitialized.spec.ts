@@ -1,5 +1,6 @@
 import { create } from '../../lib/create';
 import { onInitialized } from '../../lib/onInitialized';
+import { NotLazilyInstanceError } from '../../core/errors';
 
 describe('onInitialized', () => {
     it('should throw error for non-lazily instance', () => {
@@ -7,7 +8,10 @@ describe('onInitialized', () => {
 
         expect(() => {
             onInitialized(regularObject as object, () => {});
-        }).toThrow(TypeError);
+        }).toThrow(NotLazilyInstanceError);
+        expect(() => {
+            onInitialized(regularObject as object, () => {});
+        }).toThrow('Expected a lazily instance');
     });
 
     it('should call callback when instance is initialized', () => {
@@ -66,15 +70,29 @@ describe('onInitialized', () => {
     });
 
     it('should handle callback errors gracefully', () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
         const instance = create(() => ({ value: 42 }));
         const errorCallback = jest.fn(() => {
             throw new Error('Callback error');
         });
+        const normalCallback = jest.fn();
 
         onInitialized(instance, errorCallback);
+        onInitialized(instance, normalCallback);
 
+        // Should not throw, but log error
         expect(() => {
             const _ = instance.value;
-        }).toThrow('Callback error');
+        }).not.toThrow();
+
+        // Normal callback should still be called
+        expect(normalCallback).toHaveBeenCalledTimes(1);
+        expect(errorCallback).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            expect.stringContaining('[Lazily] Error in initialization callback:'),
+            'Callback error'
+        );
+
+        consoleErrorSpy.mockRestore();
     });
 });
