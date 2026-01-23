@@ -1,4 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const nxPreset = require('@nx/jest/preset').default;
 
-module.exports = { ...nxPreset };
+module.exports = {
+    ...nxPreset,
+    coverageReporters: ['cobertura', 'html', 'text-summary', 'lcov'],
+};

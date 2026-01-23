@@ -1,4 +1,6 @@
-export default {
+import type { Config } from 'jest';
+
+const config: Config = {
     displayName: 'lazy',
     preset: '../../jest.preset.ts',
     testEnvironment: 'node',
@@ -14,3 +16,5 @@ export default {
         '!src/**/*.test.ts',
     ],
 };
+
+export default config;
