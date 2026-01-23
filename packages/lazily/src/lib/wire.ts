@@ -1,7 +1,7 @@
 import { isLazilyInstance } from "../core/lazily-instance";
 import { onInitialized } from "./onInitialized";
 
-export function setup<T extends object>(object: T, callback: (this: T) => void) {
+export function wire<T extends object>(object: T, callback: (this: T) => void) {
     const proxy = new Proxy(object, {
         set(target, p, newValue, receiver) {
             if (isLazilyInstance(newValue)) {

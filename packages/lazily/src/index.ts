@@ -4,28 +4,4 @@ export { onInitialized } from './lib/onInitialized';
 export { invalidate } from './lib/invalidate';
 export { reset } from './lib/reset';
 export { value } from './lib/value';
-
-// Re-export core types and utilities for advanced usage
-export { Lazily } from './core/Lazily';
-export { LazilyProxyHandler } from './core/proxy-handler';
-export {
-    isLazilyInstance,
-    assertIsLazilyInstance,
-    IS_INITIALIZED,
-    INVALIDATE as RELEASE,
-    GET,
-    ON_INITIALIZE,
-    IS_LAZILY,
-    type LazilyInstance,
-} from './core/lazily-instance';
-export {
-    getContext,
-    defineContext,
-    clearContext,
-    isInitializedContext,
-    isValidContext,
-    type LazilyContext,
-    type InitializedLazilyContext,
-    type UninitializedLazilyContext,
-    type InvalidatedLazilyContext as ReleasedLazilyContext,
-} from './core/context';
+export { wire } from './lib/wire';
