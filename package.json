@@ -3,7 +3,9 @@
     "version": "0.0.1",
     "description": "A lazy-related library",
     "private": true,
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "start": "nx run lazy:build --watch",
         "build": "nx run lazy:build",
@@ -35,6 +37,7 @@
         "jest": "^29.7.0",
         "nx": "^20.3.0",
         "rollup": "^4.28.1",
+        "rollup-plugin-dts": "^6.3.0",
         "rollup-plugin-esbuild": "^6.0.1",
         "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",

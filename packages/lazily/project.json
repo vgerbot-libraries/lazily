@@ -9,8 +9,20 @@
             "executor": "nx:run-commands",
             "outputs": ["{workspaceRoot}/packages/lazily/dist"],
             "options": {
-                "commands": ["nx run lazy:build:rollup", "nx run lazy:build:types"],
+                "commands": [
+                    "nx run lazy:build:rollup",
+                    "rm -f packages/lazily/dist/index.cjs.d.ts packages/lazily/dist/index.esm.d.ts",
+                    "nx run lazy:build:dts",
+                    "rm -rf packages/lazily/dist/src"
+                ],
                 "parallel": false
+            }
+        },
+        "build:dts": {
+            "executor": "nx:run-commands",
+            "outputs": ["{workspaceRoot}/packages/lazily/dist/index.d.ts"],
+            "options": {
+                "command": "rollup -c packages/lazily/rollup.config.dts.ts"
             }
         },
         "build:rollup": {
@@ -24,15 +36,8 @@
                 "entryFile": "packages/lazily/src/index.ts",
                 "format": ["esm", "cjs"],
                 "external": [],
-                "rollupConfig": "packages/lazily/rollup.config.ts"
-            }
-        },
-        "build:types": {
-            "executor": "nx:run-commands",
-            "outputs": ["{workspaceRoot}/packages/lazily/dist"],
-            "options": {
-                "command": "tsc --project packages/lazily/tsconfig.lib.json --emitDeclarationOnly --declaration --declarationMap",
-                "cwd": "{workspaceRoot}"
+                "rollupConfig": "packages/lazily/rollup.config.ts",
+                "skipTypeCheck": true
             }
         },
         "test": {
