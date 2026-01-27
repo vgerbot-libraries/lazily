@@ -25,10 +25,10 @@ yarn add @vgerbot/lazily
 ## Quick Start
 
 ```typescript
-import { create } from '@vgerbot/lazily';
+import { lazy } from '@vgerbot/lazily';
 
 // Create a lazy instance
-const expensiveObject = create(() => {
+const expensiveObject = lazy(() => {
     console.log('Creating expensive object...');
     return {
         data: 'some expensive computation',
@@ -51,7 +51,7 @@ expensiveObject.process(); // No log, uses cached instance
 
 ## API Reference
 
-### `create<T>(factory: () => T): T`
+### `lazy<T>(factory: () => T): T`
 
 Creates a lazy instance that will be initialized on first access.
 
@@ -64,7 +64,7 @@ Creates a lazy instance that will be initialized on first access.
 **Example:**
 
 ```typescript
-import { create } from '@vgerbot/lazily';
+import { lazy } from '@vgerbot/lazily';
 
 class DatabaseConnection {
     connect() {
@@ -72,7 +72,7 @@ class DatabaseConnection {
     }
 }
 
-const db = create(() => {
+const db = lazy(() => {
     console.log('Establishing database connection...');
     return new DatabaseConnection();
 });
@@ -118,9 +118,9 @@ Checks whether a lazy instance has been initialized.
 **Example:**
 
 ```typescript
-import { create, isInitialized } from '@vgerbot/lazily';
+import { lazy, isInitialized } from '@vgerbot/lazily';
 
-const obj = create(() => ({ value: 42 }));
+const obj = lazy(() => ({ value: 42 }));
 
 console.log(isInitialized(obj)); // false
 
@@ -143,9 +143,9 @@ Registers a callback to be called when a lazy instance is initialized.
 **Example:**
 
 ```typescript
-import { create, onInitialized } from '@vgerbot/lazily';
+import { lazy, onInitialized } from '@vgerbot/lazily';
 
-const service = create(() => ({ name: 'MyService' }));
+const service = lazy(() => ({ name: 'MyService' }));
 
 const unsubscribe = onInitialized(service, (initializedService) => {
     console.log(`Service ${initializedService.name} is ready!`);
@@ -170,15 +170,15 @@ Wires lazy instances to an object, automatically replacing them with real values
 **Example:**
 
 ```typescript
-import { create, wire } from '@vgerbot/lazily';
+import { lazy, wire } from '@vgerbot/lazily';
 
 class Application {
     declare database: DatabaseConnection;
     declare cache: CacheService;
     constructor() {
         wire(this, function() {
-            this.database = create(() => new DatabaseConnection());
-            this.cache = create(() => new CacheService());
+            this.database = lazy(() => new DatabaseConnection());
+            this.cache = lazy(() => new CacheService());
         });
     }
 }
@@ -203,9 +203,9 @@ Invalidates a lazy instance, preventing further access until reset.
 **Example:**
 
 ```typescript
-import { create, invalidate } from '@vgerbot/lazily';
+import { lazy, invalidate } from '@vgerbot/lazily';
 
-const obj = create(() => ({ value: 42 }));
+const obj = lazy(() => ({ value: 42 }));
 const _ = obj.value; // Initialize
 
 invalidate(obj);
@@ -228,10 +228,10 @@ Resets a lazy instance to its uninitialized state, allowing it to be re-initiali
 **Example:**
 
 ```typescript
-import { create, reset, invalidate } from '@vgerbot/lazily';
+import { lazy, reset, invalidate } from '@vgerbot/lazily';
 
 let callCount = 0;
-const obj = create(() => {
+const obj = lazy(() => {
     callCount++;
     return { value: callCount };
 });
@@ -252,9 +252,9 @@ The library provides several error classes for programmatic error handling:
 Thrown when attempting to access an invalidated lazy instance.
 
 ```typescript
-import { create, invalidate, InvalidatedLazilyError } from '@vgerbot/lazily';
+import { lazy, invalidate, InvalidatedLazilyError } from '@vgerbot/lazily';
 
-const obj = create(() => ({ value: 42 }));
+const obj = lazy(() => ({ value: 42 }));
 invalidate(obj);
 
 try {
@@ -287,9 +287,9 @@ try {
 Thrown when the factory function throws an error during initialization.
 
 ```typescript
-import { create, LazilyFactoryError } from '@vgerbot/lazily';
+import { lazy, LazilyFactoryError } from '@vgerbot/lazily';
 
-const obj = create(() => {
+const obj = lazy(() => {
     throw new Error('Factory failed');
 });
 
@@ -324,7 +324,7 @@ if (error.code === LazilyErrorCode.INVALIDATED_ACCESS) {
 ### Class with Lazy Properties
 
 ```typescript
-import { create } from '@vgerbot/lazily';
+import { lazy } from '@vgerbot/lazily';
 
 class Editor {
     public content = '';
@@ -342,7 +342,7 @@ class Document {
     declare editor: Editor;
 
     constructor() {
-        this.editor = create(() => new Editor());
+        this.editor = lazy(() => new Editor());
     }
 }
 
@@ -358,7 +358,7 @@ console.log(doc.editor.getContent()); // "Hello World"
 ### Nested Lazy Initialization
 
 ```typescript
-import { create, isInitialized } from '@vgerbot/lazily';
+import { lazy, isInitialized } from '@vgerbot/lazily';
 
 class Inner {
     public value = 1;
@@ -368,11 +368,11 @@ class Outer {
     declare inner: Inner;
 
     constructor() {
-        this.inner = create(() => new Inner());
+        this.inner = lazy(() => new Inner());
     }
 }
 
-const outer = create(() => new Outer());
+const outer = lazy(() => new Outer());
 
 console.log(isInitialized(outer)); // false
 console.log(isInitialized(outer.inner)); // false
@@ -387,10 +387,10 @@ console.log(value); // 1
 ### Lifecycle Management
 
 ```typescript
-import { create, invalidate, reset, onInitialized } from '@vgerbot/lazily';
+import { lazy, invalidate, reset, onInitialized } from '@vgerbot/lazily';
 
 let callCount = 0;
-const instance = create(() => {
+const instance = lazy(() => {
     callCount++;
     return { value: callCount };
 });
@@ -413,7 +413,7 @@ console.log(callCount); // 2
 ### Wire Function for Dependency Injection
 
 ```typescript
-import { create, wire } from '@vgerbot/lazily';
+import { lazy, wire } from '@vgerbot/lazily';
 
 class DatabaseService {
     query(sql: string) {
@@ -432,8 +432,8 @@ class Application {
     declare cache: CacheService;
     constructor() {
         wire(app, function() {
-            this.database = create(() => new DatabaseService());
-            this.cache = create(() => new CacheService());
+            this.database = lazy(() => new DatabaseService());
+            this.cache = lazy(() => new CacheService());
         });
     }
 }
