@@ -4,7 +4,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { defineConfig } from 'rollup';
 import esbuild from 'rollup-plugin-esbuild';
-import dts from 'rollup-plugin-dts';
 
 const currentFile = fileURLToPath(import.meta.url);
 const currentDir = dirname(currentFile);

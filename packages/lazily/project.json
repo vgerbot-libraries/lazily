@@ -22,7 +22,7 @@
             "executor": "nx:run-commands",
             "outputs": ["{workspaceRoot}/packages/lazily/dist/index.d.ts"],
             "options": {
-                "command": "rollup -c packages/lazily/rollup.config.dts.ts"
+                "command": "rollup -c packages/lazily/rollup.config.dts.ts --configPlugin typescript"
             }
         },
         "build:rollup": {
