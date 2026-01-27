@@ -5,5 +5,6 @@
     "packageOptions": {
         "entryPoints": ["src/index.ts"]
     },
-    "includeVersion": true
+    "includeVersion": true,
+    "out": "docs"
 }
