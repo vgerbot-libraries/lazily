@@ -1,6 +1,6 @@
 import type { Lazily } from '../../core/Lazily';
 import { GET } from '../../core/lazily-instance';
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 import { isInitialized } from '../../lib/isInitialized';
 import { invalidate } from '../../lib/invalidate';
 import { InvalidatedLazilyError } from '../../core/errors';
@@ -15,7 +15,7 @@ describe('invalidate', () => {
     });
 
     it('should mark instance as invalidated', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Initialize first
         const _ = instance.value;
@@ -26,7 +26,7 @@ describe('invalidate', () => {
     });
 
     it('should throw error when accessing invalidated instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Initialize
         const _ = instance.value;
@@ -45,7 +45,7 @@ describe('invalidate', () => {
     });
 
     it('should allow releasing uninitialized instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         expect(() => {
             invalidate(instance);

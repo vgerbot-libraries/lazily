@@ -1,13 +1,12 @@
 import { Lazily } from '../../core/Lazily';
-import { isLazilyInstance } from '../../core/lazily-instance';
-import { IS_LAZILY } from '../../core/lazily-instance';
+import { IS_LAZILY, isLazilyInstance } from '../../core/lazily-instance';
 import { LazilyProxyHandler } from '../../core/proxy-handler';
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 
-describe('create', () => {
+describe('lazy', () => {
     it('should create a lazily instance', () => {
         const factory = jest.fn(() => ({ value: 42 }));
-        const instance = create(factory);
+        const instance = lazy(factory);
 
         expect(isLazilyInstance(instance)).toBe(true);
         expect(factory).not.toHaveBeenCalled();
@@ -15,7 +14,7 @@ describe('create', () => {
 
     it('should not call factory until first access', () => {
         const factory = jest.fn(() => ({ value: 42 }));
-        const instance = create(factory);
+        const instance = lazy(factory);
 
         expect(factory).not.toHaveBeenCalled();
 
@@ -26,7 +25,7 @@ describe('create', () => {
 
     it('should only call factory once', () => {
         const factory = jest.fn(() => ({ value: 42 }));
-        const instance = create(factory);
+        const instance = lazy(factory);
 
         const value1 = instance.value;
         const value2 = instance.value;
@@ -53,7 +52,7 @@ describe('create', () => {
             }
         }
 
-        const instance = create(() => new TestClass());
+        const instance = lazy(() => new TestClass());
 
         expect(instance.value).toBe(100);
         expect(instance.name).toBe('test');
@@ -61,14 +60,14 @@ describe('create', () => {
     });
 
     it('should handle property assignment', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         instance.value = 100;
         expect(instance.value).toBe(100);
     });
 
     it('should handle property existence checks', () => {
-        const instance = create(() => ({ value: 42, name: 'test' }));
+        const instance = lazy(() => ({ value: 42, name: 'test' }));
 
         expect('value' in instance).toBe(true);
         expect('name' in instance).toBe(true);
@@ -76,7 +75,7 @@ describe('create', () => {
     });
 
     it('should handle ownKeys', () => {
-        const instance = create(() => ({ value: 42, name: 'test' }));
+        const instance = lazy(() => ({ value: 42, name: 'test' }));
 
         const keys = Object.keys(instance);
         expect(keys).toContain('value');
@@ -84,7 +83,7 @@ describe('create', () => {
     });
 
     it('should handle getOwnPropertyDescriptor', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         const descriptor = Object.getOwnPropertyDescriptor(instance, 'value');
         expect(descriptor).toBeDefined();
@@ -93,7 +92,7 @@ describe('create', () => {
 
     it('should handle getPrototypeOf', () => {
         class TestClass {}
-        const instance = create(() => new TestClass());
+        const instance = lazy(() => new TestClass());
 
         const proto = Object.getPrototypeOf(instance);
         expect(proto).toBe(TestClass.prototype);
@@ -101,7 +100,7 @@ describe('create', () => {
 
     it('should preserve target properties', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
-        const proxy = new Proxy(lazily as { value: number }, new LazilyProxyHandler());
+        const proxy = new Proxy(lazily as unknown as { value: number }, new LazilyProxyHandler());
 
         // IS_LAZILY should be accessible directly
         expect(proxy[IS_LAZILY]).toBe(true);

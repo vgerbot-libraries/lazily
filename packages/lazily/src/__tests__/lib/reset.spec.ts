@@ -1,4 +1,4 @@
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 import { isInitialized } from '../../lib/isInitialized';
 import { onInitialized } from '../../lib/onInitialized';
 import { invalidate } from '../../lib/invalidate';
@@ -18,7 +18,7 @@ describe('reset', () => {
     });
 
     it('should reset initialized instance to uninitialized', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Initialize
         const _ = instance.value;
@@ -35,7 +35,7 @@ describe('reset', () => {
 
     it('should preserve listeners after reset', () => {
         const callback = jest.fn();
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         onInitialized(instance, callback);
 
@@ -52,7 +52,7 @@ describe('reset', () => {
     });
 
     it('should allow resetting invalidated instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Initialize and invalidate
         const _ = instance.value;
@@ -71,7 +71,7 @@ describe('reset', () => {
     });
 
     it('should handle reset of uninitialized instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         expect(() => {
             reset(instance);

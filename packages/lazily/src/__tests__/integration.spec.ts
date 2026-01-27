@@ -1,4 +1,4 @@
-import { create, isInitialized, onInitialized, invalidate, reset } from '../index';
+import { lazy, isInitialized, onInitialized, invalidate, reset } from '../index';
 
 describe('integration tests', () => {
     it('should work with class instances', () => {
@@ -18,7 +18,7 @@ describe('integration tests', () => {
             declare editor: Editor;
 
             constructor() {
-                this.editor = create(() => new Editor());
+                this.editor = lazy(() => new Editor());
             }
         }
 
@@ -41,11 +41,11 @@ describe('integration tests', () => {
             declare inner: Inner;
 
             constructor() {
-                this.inner = create(() => new Inner());
+                this.inner = lazy(() => new Inner());
             }
         }
 
-        const outer = create(() => new Outer());
+        const outer = lazy(() => new Outer());
 
         expect(isInitialized(outer)).toBe(false);
         expect(isInitialized(outer.inner)).toBe(false);
@@ -59,7 +59,7 @@ describe('integration tests', () => {
 
     it('should handle invalidate and re-initialization cycle', () => {
         let callCount = 0;
-        const instance = create(() => {
+        const instance = lazy(() => {
             callCount++;
             return { value: callCount };
         });
@@ -83,7 +83,7 @@ describe('integration tests', () => {
         const callback2 = jest.fn();
         const callback3 = jest.fn();
 
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         const unsubscribe1 = onInitialized(instance, callback1);
         const unsubscribe2 = onInitialized(instance, callback2);

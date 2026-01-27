@@ -1,11 +1,11 @@
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 import { wire } from '../../lib/wire';
 import { isLazilyInstance } from '../../core/lazily-instance';
 
 describe('wire', () => {
     it('should replace lazily instance with real value when initialized', () => {
         const target = {} as { service: { value: number } };
-        const lazyService = create(() => ({ value: 42 }));
+        const lazyService = lazy(() => ({ value: 42 }));
 
         wire(target, function () {
             this.service = lazyService;
@@ -42,8 +42,8 @@ describe('wire', () => {
             service1: { value: number };
             service2: { name: string };
         };
-        const lazyService1 = create(() => ({ value: 100 }));
-        const lazyService2 = create(() => ({ name: 'test' }));
+        const lazyService1 = lazy(() => ({ value: 100 }));
+        const lazyService2 = lazy(() => ({ name: 'test' }));
 
         wire(target, function () {
             this.service1 = lazyService1;
@@ -81,8 +81,8 @@ describe('wire', () => {
 
     it('should allow property reassignment', () => {
         const target = {} as { service: { value: number } };
-        const lazyService1 = create(() => ({ value: 1 }));
-        const lazyService2 = create(() => ({ value: 2 }));
+        const lazyService1 = lazy(() => ({ value: 1 }));
+        const lazyService2 = lazy(() => ({ value: 2 }));
 
         wire(target, function () {
             this.service = lazyService1;
@@ -101,7 +101,7 @@ describe('wire', () => {
 
     it('should handle reassignment of lazily instance to non-lazily value', () => {
         const target = {} as { service: { value: number } | number };
-        const lazyService = create(() => ({ value: 42 }));
+        const lazyService = lazy(() => ({ value: 42 }));
 
         wire(target, function () {
             this.service = lazyService;
@@ -117,7 +117,7 @@ describe('wire', () => {
 
     it('should not intercept nested property assignments', () => {
         const target = {} as { config: { service: { value: number } } };
-        const lazyService = create(() => ({ value: 42 }));
+        const lazyService = lazy(() => ({ value: 42 }));
 
         wire(target, function () {
             this.config = { service: lazyService };
@@ -140,8 +140,8 @@ describe('wire', () => {
             config: { name: string };
             count: number;
         };
-        const lazyService = create(() => ({ value: 100 }));
-        const lazyConfig = create(() => ({ name: 'test' }));
+        const lazyService = lazy(() => ({ value: 100 }));
+        const lazyConfig = lazy(() => ({ name: 'test' }));
 
         wire(target, function () {
             this.service = lazyService;
@@ -167,7 +167,7 @@ describe('wire', () => {
             existing: string;
             service: { value: number };
         };
-        const lazyService = create(() => ({ value: 42 }));
+        const lazyService = lazy(() => ({ value: 42 }));
 
         wire(target, function () {
             this.service = lazyService;
@@ -197,7 +197,7 @@ describe('wire', () => {
             service1: { value: number };
             service2: { value: number };
         };
-        const lazyService = create(() => ({ value: 42 }));
+        const lazyService = lazy(() => ({ value: 42 }));
 
         wire(target, function () {
             this.service1 = lazyService;

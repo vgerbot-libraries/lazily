@@ -1,6 +1,6 @@
 import { Lazily } from '../../core/Lazily';
 import { assertIsLazilyInstance, isLazilyInstance } from '../../core/lazily-instance';
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 import { NotLazilyInstanceError } from '../../core/errors';
 
 describe('lazily-instance', () => {
@@ -12,7 +12,7 @@ describe('lazily-instance', () => {
         });
 
         it('should return true for proxy created by create', () => {
-            const instance = create(() => ({ value: 42 }));
+            const instance = lazy(() => ({ value: 42 }));
 
             expect(isLazilyInstance(instance)).toBe(true);
         });

@@ -1,4 +1,4 @@
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 import { isInitialized } from '../../lib/isInitialized';
 import { invalidate } from '../../lib/invalidate';
 
@@ -12,13 +12,13 @@ describe('isInitialized', () => {
     });
 
     it('should return false for uninitialized lazily instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         expect(isInitialized(instance)).toBe(false);
     });
 
     it('should return true for initialized lazily instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Access the instance to initialize it
         const _ = instance.value;
@@ -27,7 +27,7 @@ describe('isInitialized', () => {
     });
 
     it('should return false for invalidated lazily instance', () => {
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Initialize
         const _ = instance.value;

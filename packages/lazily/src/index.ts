@@ -1,4 +1,4 @@
-export { create } from './lib/create';
+export { lazy as create } from './lib/lazy';
 export { isInitialized } from './lib/isInitialized';
 export { onInitialized } from './lib/onInitialized';
 export { invalidate } from './lib/invalidate';

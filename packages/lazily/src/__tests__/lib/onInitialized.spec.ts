@@ -1,4 +1,4 @@
-import { create } from '../../lib/create';
+import { lazy } from '../../lib/lazy';
 import { onInitialized } from '../../lib/onInitialized';
 import { NotLazilyInstanceError } from '../../core/errors';
 
@@ -16,7 +16,7 @@ describe('onInitialized', () => {
 
     it('should call callback when instance is initialized', () => {
         const callback = jest.fn();
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         onInitialized(instance, callback);
 
@@ -31,7 +31,7 @@ describe('onInitialized', () => {
 
     it('should call callback immediately if already initialized', () => {
         const callback = jest.fn();
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         // Initialize first
         const _ = instance.value;
@@ -45,7 +45,7 @@ describe('onInitialized', () => {
     it('should support multiple callbacks', () => {
         const callback1 = jest.fn();
         const callback2 = jest.fn();
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         onInitialized(instance, callback1);
         onInitialized(instance, callback2);
@@ -58,7 +58,7 @@ describe('onInitialized', () => {
 
     it('should return unsubscribe function', () => {
         const callback = jest.fn();
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
 
         const unsubscribe = onInitialized(instance, callback);
 
@@ -71,7 +71,7 @@ describe('onInitialized', () => {
 
     it('should handle callback errors gracefully', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-        const instance = create(() => ({ value: 42 }));
+        const instance = lazy(() => ({ value: 42 }));
         const errorCallback = jest.fn(() => {
             throw new Error('Callback error');
         });
