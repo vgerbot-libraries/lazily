@@ -1,5 +1,11 @@
-import { getContext, clearContext, isInitializedContext, isValidContext } from '../../core/context';
 import { Lazily } from '../../core/Lazily';
+import {
+    type LazilyContext,
+    clearContext,
+    getContext,
+    isInitializedContext,
+    isValidContext,
+} from '../../core/context';
 import { GET, INVALIDATE, ON_INITIALIZE } from '../../core/lazily-instance';
 
 describe('context', () => {
@@ -56,7 +62,7 @@ describe('context', () => {
 
     describe('isValidContext', () => {
         it('should return false for undefined', () => {
-            expect(isValidContext(undefined as unknown)).toBe(false);
+            expect(isValidContext(undefined as unknown as LazilyContext<object>)).toBe(false);
         });
 
         it('should return true for uninitialized context', () => {

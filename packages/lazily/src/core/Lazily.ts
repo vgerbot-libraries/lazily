@@ -17,19 +17,59 @@ import {
     ON_INITIALIZE,
     INVALIDATE,
 } from './lazily-instance';
+
+/**
+ * Symbol key for storing initialization event listeners
+ * @internal
+ */
 const INITIALIZE_EVENT_KEY = Symbol('initialize-event');
 
+/**
+ * Core class implementing lazy initialization behavior
+ * This class wraps a factory function and defers its execution until the value is first accessed.
+ * It manages the lifecycle of the lazy instance including initialization, invalidation, and callbacks.
+ *
+ * @template T - The type of the object to be lazily initialized
+ * @internal
+ */
 export class Lazily<T extends object> implements LazilyInstance<T> {
+    /**
+     * Creates a new Lazily instance
+     * @param factory - Function that creates the underlying value when first accessed
+     */
     constructor(private readonly factory: () => T) {}
+
+    /** @internal */
     [IS_LAZILY]: true = true;
+
+    /**
+     * Checks if the instance has been initialized
+     * @returns True if the factory has been called and the value is available
+     */
     [IS_INITIALIZED](): boolean {
         return isInitializedContext(getContext(this));
     }
+
+    /**
+     * Invalidates the instance, preventing further access
+     * After invalidation, any attempt to access the value will throw an error
+     * until the instance is reset.
+     */
     [INVALIDATE](): void {
         defineContext(this, {
             invalidated: true,
         });
     }
+
+    /**
+     * Gets the underlying value, initializing it if necessary
+     * On first access, calls the factory function and caches the result.
+     * Subsequent calls return the cached value.
+     *
+     * @returns The initialized value
+     * @throws {InvalidatedLazilyError} If the instance has been invalidated
+     * @throws {LazilyFactoryError} If the factory function throws an error
+     */
     [GET](): T {
         const context = getContext<T>(this);
         if (isInitializedContext(context)) {
@@ -77,6 +117,22 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
 
         return realInstance;
     }
+    /**
+     * Registers a callback to be invoked when the instance is initialized
+     * If the instance is already initialized, the callback is invoked immediately.
+     * If the instance is invalidated, returns a no-op unsubscribe function.
+     *
+     * @param callback - Function to call with the initialized instance
+     * @returns A function to unregister the callback
+     * @example
+     * ```ts
+     * const unsubscribe = instance[ON_INITIALIZE]((value) => {
+     *   console.log('Initialized:', value);
+     * });
+     * // Later, to stop listening:
+     * unsubscribe();
+     * ```
+     */
     [ON_INITIALIZE](callback: (instance: T) => void): () => void {
         const context =
             getContext<T>(this) ??

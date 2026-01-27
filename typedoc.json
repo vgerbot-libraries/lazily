@@ -1,0 +1,9 @@
+{
+    "name": "Lazily",
+    "entryPointStrategy": "packages",
+    "entryPoints": ["packages/*"],
+    "packageOptions": {
+        "entryPoints": ["src/index.ts"]
+    },
+    "includeVersion": true
+}

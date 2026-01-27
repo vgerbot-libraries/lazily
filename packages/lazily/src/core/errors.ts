@@ -78,7 +78,7 @@ export class NotLazilyInstanceError extends LazilyError {
             : valueType;
 
         super(
-            `Expected a lazily instance, but received ${valueDescription}. Use create() to create a lazily instance.`,
+            `Expected a lazily instance, but received ${valueDescription}. Use lazy() to create a lazily instance.`,
             LazilyErrorCode.NOT_LAZILY_INSTANCE,
             {
                 ...context,
