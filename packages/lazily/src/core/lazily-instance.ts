@@ -23,6 +23,11 @@ export const GET = Symbol('get');
  * @internal
  */
 export const ON_INITIALIZE = Symbol('on-initialize');
+/**
+ * Symbol used to register invalidation callbacks
+ * @internal
+ */
+export const ON_INVALIDATE = Symbol('on-invalidate');
 
 /**
  * Symbol used to trigger initialization events
@@ -69,6 +74,12 @@ export interface LazilyInstance<T extends object> {
      * @returns A function to unregister the callback
      */
     [ON_INITIALIZE](callback: (instance: T) => void): () => void;
+    /**
+     * Registers a callback to be invoked when the instance is invalidated after initialization.
+     * @param callback - Function to call with the initialized instance
+     * @returns A function to unregister the callback
+     */
+    [ON_INVALIDATE](callback: (instance: T) => void): () => void;
 }
 
 /**
