@@ -18,6 +18,10 @@ export enum LazilyErrorCode {
      * Factory function threw an error during initialization
      */
     FACTORY_ERROR = 'LAZILY_FACTORY_ERROR',
+    /**
+     * Factory function returned an invalid value (null, undefined, or non-object)
+     */
+    INVALID_FACTORY_RETURN = 'LAZILY_INVALID_FACTORY_RETURN',
 }
 
 /**
@@ -114,6 +118,31 @@ export class LazilyFactoryError extends LazilyError {
         if (originalError instanceof Error && originalError.stack) {
             this.stack = `${this.stack}\n\nOriginal error:\n${originalError.stack}`;
         }
+    }
+}
+
+/**
+ * Thrown when the factory function returns an invalid value (null, undefined, or non-object)
+ */
+export class InvalidFactoryReturnError extends LazilyError {
+    constructor(
+        returnValue: unknown,
+        context?: Record<string, unknown>
+    ) {
+        const valueType = returnValue === null ? 'null' : typeof returnValue;
+        const valueDescription = valueType === 'object'
+            ? `object of type ${returnValue?.constructor?.name ?? 'Unknown'}`
+            : valueType;
+
+        super(
+            `Factory function returned an invalid value: ${valueDescription}. Factory must return a non-null, non-undefined object that can be proxied.`,
+            LazilyErrorCode.INVALID_FACTORY_RETURN,
+            {
+                ...context,
+                returnType: valueType,
+                returnValue,
+            }
+        );
     }
 }
 

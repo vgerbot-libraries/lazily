@@ -1,6 +1,6 @@
 import { Lazily } from '../../core/Lazily';
 import { GET, IS_INITIALIZED, IS_LAZILY, ON_INITIALIZE, INVALIDATE } from '../../core/lazily-instance';
-import { InvalidatedLazilyError, LazilyFactoryError } from '../../core/errors';
+import { InvalidatedLazilyError, InvalidFactoryReturnError, LazilyFactoryError } from '../../core/errors';
 
 describe('Lazily', () => {
     describe('IS_LAZILY', () => {
@@ -82,6 +82,61 @@ describe('Lazily', () => {
             expect(() => {
                 lazily[GET]();
             }).toThrow('Factory function threw an error during lazy initialization');
+        });
+
+        it('should throw InvalidFactoryReturnError when factory returns null', () => {
+            const lazily = new Lazily(() => null as any);
+
+            expect(() => {
+                lazily[GET]();
+            }).toThrow(InvalidFactoryReturnError);
+            expect(() => {
+                lazily[GET]();
+            }).toThrow('Factory function returned an invalid value: null');
+        });
+
+        it('should throw InvalidFactoryReturnError when factory returns undefined', () => {
+            const lazily = new Lazily(() => undefined as any);
+
+            expect(() => {
+                lazily[GET]();
+            }).toThrow(InvalidFactoryReturnError);
+            expect(() => {
+                lazily[GET]();
+            }).toThrow('Factory function returned an invalid value: undefined');
+        });
+
+        it('should throw InvalidFactoryReturnError when factory returns a number', () => {
+            const lazily = new Lazily(() => 42 as any);
+
+            expect(() => {
+                lazily[GET]();
+            }).toThrow(InvalidFactoryReturnError);
+            expect(() => {
+                lazily[GET]();
+            }).toThrow('Factory function returned an invalid value: number');
+        });
+
+        it('should throw InvalidFactoryReturnError when factory returns a string', () => {
+            const lazily = new Lazily(() => 'hello' as any);
+
+            expect(() => {
+                lazily[GET]();
+            }).toThrow(InvalidFactoryReturnError);
+            expect(() => {
+                lazily[GET]();
+            }).toThrow('Factory function returned an invalid value: string');
+        });
+
+        it('should throw InvalidFactoryReturnError when factory returns a boolean', () => {
+            const lazily = new Lazily(() => true as any);
+
+            expect(() => {
+                lazily[GET]();
+            }).toThrow(InvalidFactoryReturnError);
+            expect(() => {
+                lazily[GET]();
+            }).toThrow('Factory function returned an invalid value: boolean');
         });
     });
 

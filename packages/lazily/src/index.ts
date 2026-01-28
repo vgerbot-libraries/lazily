@@ -63,5 +63,6 @@ export {
     InvalidatedLazilyError,
     NotLazilyInstanceError,
     LazilyFactoryError,
+    InvalidFactoryReturnError,
     LazilyErrorCode,
 } from './core/errors';

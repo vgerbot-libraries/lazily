@@ -7,6 +7,7 @@ import {
 } from './context';
 import {
     InvalidatedLazilyError,
+    InvalidFactoryReturnError,
     LazilyFactoryError,
 } from './errors';
 import {
@@ -90,6 +91,20 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
             });
         }
 
+        // Validate factory return value
+        if (realInstance === null || realInstance === undefined) {
+            throw new InvalidFactoryReturnError(realInstance, {
+                instanceType: this.constructor.name,
+            });
+        }
+
+        // Check if return value is an object (not primitive types like number, string, boolean)
+        if (typeof realInstance !== 'object') {
+            throw new InvalidFactoryReturnError(realInstance, {
+                instanceType: this.constructor.name,
+            });
+        }
+
         const existingListeners = context && isValidContext(context) ? context.listeners : new Map();
         defineContext(this, {
             listeners: existingListeners,
@@ -152,7 +167,14 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
 
         // If already initialized, call callback immediately
         if (isInitializedContext(context)) {
-            callback(context.value);
+            try {
+                callback(context.value);
+            } catch (error) {
+                console.error(
+                    '[Lazily] Error in initialization callback:',
+                    error instanceof Error ? error.message : String(error)
+                );
+            }
             return () => {};
         }
 
