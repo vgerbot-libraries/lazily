@@ -45,7 +45,8 @@
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
                 "jestConfig": "packages/lazily/jest.config.ts",
-                "passWithNoTests": true
+                "passWithNoTests": true,
+                "codeCoverage": true
             },
             "configurations": {
                 "ci": {
