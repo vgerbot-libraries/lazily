@@ -1,5 +1,7 @@
 # Lazily
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5277a66e4f2246db8b064102c88dbd4a)](https://app.codacy.com/gh/vgerbot-libraries/lazily?utm_source=github.com&utm_medium=referral&utm_content=vgerbot-libraries/lazily&utm_campaign=Badge_Grade)
+
 A powerful TypeScript library for lazy initialization of objects. Lazily allows you to defer expensive object creation until the first access, improving performance and reducing memory usage.
 
 ## Features
