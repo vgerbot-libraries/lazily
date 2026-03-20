@@ -85,7 +85,7 @@ describe('Lazily', () => {
         });
 
         it('should throw InvalidFactoryReturnError when factory returns null', () => {
-            const lazily = new Lazily(() => null as any);
+            const lazily = new Lazily((() => null) as unknown as () => object);
 
             expect(() => {
                 lazily[GET]();
@@ -96,7 +96,7 @@ describe('Lazily', () => {
         });
 
         it('should throw InvalidFactoryReturnError when factory returns undefined', () => {
-            const lazily = new Lazily(() => undefined as any);
+            const lazily = new Lazily((() => undefined) as unknown as () => object);
 
             expect(() => {
                 lazily[GET]();
@@ -107,7 +107,7 @@ describe('Lazily', () => {
         });
 
         it('should throw InvalidFactoryReturnError when factory returns a number', () => {
-            const lazily = new Lazily(() => 42 as any);
+            const lazily = new Lazily((() => 42) as unknown as () => object);
 
             expect(() => {
                 lazily[GET]();
@@ -118,7 +118,7 @@ describe('Lazily', () => {
         });
 
         it('should throw InvalidFactoryReturnError when factory returns a string', () => {
-            const lazily = new Lazily(() => 'hello' as any);
+            const lazily = new Lazily((() => 'hello') as unknown as () => object);
 
             expect(() => {
                 lazily[GET]();
@@ -129,7 +129,7 @@ describe('Lazily', () => {
         });
 
         it('should throw InvalidFactoryReturnError when factory returns a boolean', () => {
-            const lazily = new Lazily(() => true as any);
+            const lazily = new Lazily((() => true) as unknown as () => object);
 
             expect(() => {
                 lazily[GET]();
