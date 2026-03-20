@@ -1,6 +1,7 @@
 {
     "name": "@vgerbot/repo-root",
     "version": "0.0.1",
+    "packageManager": "pnpm@9",
     "description": "A lazy-related library",
     "private": true,
     "files": [
