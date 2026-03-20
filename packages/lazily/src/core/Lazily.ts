@@ -48,7 +48,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
     constructor(private readonly factory: () => T) {}
 
     /** @internal */
-    [IS_LAZILY]: true = true;
+    [IS_LAZILY] = true as const;
 
     /**
      * Checks if the instance has been initialized
