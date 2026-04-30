@@ -1,14 +1,16 @@
 {
     "name": "@vgerbot/lazily",
     "version": "0.0.0",
+    "description": "A tiny TypeScript utility for lazy initialization",
     "type": "module",
+    "main": "./dist/index.esm.js",
     "module": "./dist/index.esm.js",
     "types": "./dist/index.d.ts",
+    "sideEffects": false,
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",
         "tag": "latest",
-        "access": "public",
-        "provenance": true
+        "access": "public"
     },
     "exports": {
         ".": {
@@ -16,5 +18,27 @@
             "types": "./dist/index.d.ts"
         }
     },
-    "files": ["dist"]
+    "repository": {
+        "url": "git@github.com:vgerbot-libraries/lazily.git",
+        "type": "git"
+    },
+    "homepage": "https://github.com/vgerbot-libraries/lazily",
+    "bugs": {
+        "url": "https://github.com/vgerbot-libraries/lazily/issues"
+    },
+    "files": ["dist"],
+    "keywords": [
+        "lazy",
+        "lazily",
+        "laziness",
+        "defer",
+        "deferred",
+        "evaluate",
+        "evaluation",
+        "compute",
+        "computation",
+        "decorator"
+    ],
+    "author": "y1j2x34 <y1j2x345@gmail.com>",
+    "license": "MIT"
 }

@@ -1,11 +1,8 @@
 {
     "name": "@vgerbot/repo-root",
     "version": "0.0.1",
-    "description": "A lazy-related library",
+    "description": "A tiny TypeScript utility for lazy initialization",
     "private": true,
-    "files": [
-        "dist"
-    ],
     "scripts": {
         "start": "nx run lazy:build --watch",
         "build": "nx run lazy:build",
@@ -19,8 +16,6 @@
         "release": "pnpm build && changeset publish",
         "typedoc": "pnpm exec typedoc"
     },
-    "keywords": [],
-    "author": "",
     "license": "MIT",
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
