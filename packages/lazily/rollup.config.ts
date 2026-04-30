@@ -1,6 +1,5 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { defineConfig } from 'rollup';
 import esbuild from 'rollup-plugin-esbuild';
@@ -21,7 +20,6 @@ export default defineConfig({
         nodeResolve({
             preferBuiltins: true,
         }),
-        commonjs(),
         esbuild({
             target: 'es2022',
             minify: false,
