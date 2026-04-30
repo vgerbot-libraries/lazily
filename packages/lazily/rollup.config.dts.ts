@@ -12,7 +12,7 @@ export default defineConfig({
         {
             file: join(currentDir, 'dist/index.d.ts'),
             format: 'esm',
-        }
+        },
     ],
     plugins: [
         dts({
@@ -21,4 +21,3 @@ export default defineConfig({
     ],
     external: [],
 });
-

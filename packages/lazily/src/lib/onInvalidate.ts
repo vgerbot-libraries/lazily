@@ -1,5 +1,5 @@
-import { NotLazilyInstanceError } from "../core/errors";
-import { isLazilyInstance, ON_INVALIDATE } from "../core/lazily-instance";
+import { NotLazilyInstanceError } from '../core/errors';
+import { ON_INVALIDATE, isLazilyInstance } from '../core/lazily-instance';
 
 /**
  * Registers a callback to be invoked when a lazily instance is invalidated.
@@ -46,4 +46,3 @@ export function onInvalidate<T extends object>(instance: T, callback: (object: T
     }
     return instance[ON_INVALIDATE](callback);
 }
-

@@ -6,7 +6,9 @@ describe('LazilyProxyHandler', () => {
     it('should delegate property access to instance', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as unknown as { value: number }, handler) as { value: number };
+        const proxy = new Proxy(lazily as unknown as { value: number }, handler) as {
+            value: number;
+        };
 
         expect(proxy.value).toBe(42);
     });
@@ -14,7 +16,9 @@ describe('LazilyProxyHandler', () => {
     it('should delegate property setting to instance', () => {
         const lazily = new Lazily(() => ({ value: 42 }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as unknown as { value: number }, handler) as { value: number };
+        const proxy = new Proxy(lazily as unknown as { value: number }, handler) as {
+            value: number;
+        };
 
         proxy.value = 100;
         expect(proxy.value).toBe(100);
@@ -23,7 +27,9 @@ describe('LazilyProxyHandler', () => {
     it('should check property existence on instance', () => {
         const lazily = new Lazily(() => ({ value: 42, name: 'test' }));
         const handler = new LazilyProxyHandler();
-        const proxy = new Proxy(lazily as unknown as { value: number; name: string }, handler) as { value: number };
+        const proxy = new Proxy(lazily as unknown as { value: number; name: string }, handler) as {
+            value: number;
+        };
 
         expect('value' in proxy).toBe(true);
         expect('name' in proxy).toBe(true);

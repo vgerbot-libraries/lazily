@@ -5,18 +5,14 @@ import {
     isInitializedContext,
     isValidContext,
 } from './context';
-import {
-    InvalidatedLazilyError,
-    InvalidFactoryReturnError,
-    LazilyFactoryError,
-} from './errors';
+import { InvalidFactoryReturnError, InvalidatedLazilyError, LazilyFactoryError } from './errors';
 import {
     GET,
+    INVALIDATE,
     IS_INITIALIZED,
     IS_LAZILY,
     type LazilyInstance,
     ON_INITIALIZE,
-    INVALIDATE,
     ON_INVALIDATE,
 } from './lazily-instance';
 
@@ -125,7 +121,8 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
             });
         }
 
-        const existingListeners = context && isValidContext(context) ? context.listeners : new Map();
+        const existingListeners =
+            context && isValidContext(context) ? context.listeners : new Map();
         defineContext(this, {
             listeners: existingListeners,
             value: realInstance,

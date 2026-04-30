@@ -8,7 +8,7 @@ type ListenersMap = Map<unknown, Set<(...args: unknown[]) => void>>;
  * Context for a lazily instance that has been initialized
  * @template T - The type of the initialized value
  */
-export interface InitializedLazilyContext<T extends object>  {
+export interface InitializedLazilyContext<T extends object> {
     /** Map of event listeners */
     listeners: ListenersMap;
     /** Indicates the instance has been initialized */
@@ -36,7 +36,7 @@ export interface UninitializedLazilyContext {
  */
 export type InvalidatedLazilyContext = {
     /** Indicates the instance has been invalidated */
-    invalidated: true
+    invalidated: true;
 };
 
 /**

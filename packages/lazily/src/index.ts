@@ -26,10 +26,10 @@ export { isInitialized } from './lib/isInitialized';
 export { onInitialized } from './lib/onInitialized';
 
 /**
-* Registers a callback to be invoked when a lazily instance is invalidated
-* @see {@link onInvalidate } for implementation details
-*/
-export { onInvalidate } from './lib/onInvalidate'
+ * Registers a callback to be invoked when a lazily instance is invalidated
+ * @see {@link onInvalidate } for implementation details
+ */
+export { onInvalidate } from './lib/onInvalidate';
 
 /**
  * Invalidates a lazily instance, preventing further access

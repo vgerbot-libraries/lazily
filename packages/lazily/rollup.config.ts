@@ -14,7 +14,7 @@ export default defineConfig({
             file: join(currentDir, 'dist/index.esm.js'),
             format: 'esm',
             sourcemap: true,
-        }
+        },
     ],
     plugins: [
         nodeResolve({

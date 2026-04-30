@@ -1,6 +1,6 @@
-import { lazy } from '../../lib/lazy';
-import { isInitialized } from '../../lib/isInitialized';
 import { invalidate } from '../../lib/invalidate';
+import { isInitialized } from '../../lib/isInitialized';
+import { lazy } from '../../lib/lazy';
 
 describe('isInitialized', () => {
     it('should return true for non-lazily instances', () => {

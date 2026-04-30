@@ -1,5 +1,5 @@
-import { ON_INITIALIZE, isLazilyInstance } from '../core/lazily-instance';
 import { NotLazilyInstanceError } from '../core/errors';
+import { ON_INITIALIZE, isLazilyInstance } from '../core/lazily-instance';
 
 /**
  * Registers a callback to be invoked when a lazily instance is initialized

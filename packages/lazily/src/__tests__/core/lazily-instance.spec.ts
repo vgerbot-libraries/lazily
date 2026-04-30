@@ -1,7 +1,7 @@
 import { Lazily } from '../../core/Lazily';
+import { NotLazilyInstanceError } from '../../core/errors';
 import { assertIsLazilyInstance, isLazilyInstance } from '../../core/lazily-instance';
 import { lazy } from '../../lib/lazy';
-import { NotLazilyInstanceError } from '../../core/errors';
 
 describe('lazily-instance', () => {
     describe('isLazilyInstance', () => {

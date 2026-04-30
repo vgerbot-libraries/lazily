@@ -38,11 +38,7 @@ export class LazilyError extends Error {
      */
     public readonly context?: Record<string, unknown>;
 
-    constructor(
-        message: string,
-        code: LazilyErrorCode,
-        context?: Record<string, unknown>
-    ) {
+    constructor(message: string, code: LazilyErrorCode, context?: Record<string, unknown>) {
         super(message);
         this.name = this.constructor.name;
         this.code = code;
@@ -72,14 +68,12 @@ export class InvalidatedLazilyError extends LazilyError {
  * Thrown when a provided value is not a lazily instance
  */
 export class NotLazilyInstanceError extends LazilyError {
-    constructor(
-        value: unknown,
-        context?: Record<string, unknown>
-    ) {
+    constructor(value: unknown, context?: Record<string, unknown>) {
         const valueType = value === null ? 'null' : typeof value;
-        const valueDescription = valueType === 'object'
-            ? `object of type ${value?.constructor?.name ?? 'Unknown'}`
-            : valueType;
+        const valueDescription =
+            valueType === 'object'
+                ? `object of type ${value?.constructor?.name ?? 'Unknown'}`
+                : valueType;
 
         super(
             `Expected a lazily instance, but received ${valueDescription}. Use lazy() to create a lazily instance.`,
@@ -97,13 +91,9 @@ export class NotLazilyInstanceError extends LazilyError {
  * Thrown when the factory function throws an error during initialization
  */
 export class LazilyFactoryError extends LazilyError {
-    constructor(
-        originalError: unknown,
-        context?: Record<string, unknown>
-    ) {
-        const errorMessage = originalError instanceof Error
-            ? originalError.message
-            : String(originalError);
+    constructor(originalError: unknown, context?: Record<string, unknown>) {
+        const errorMessage =
+            originalError instanceof Error ? originalError.message : String(originalError);
 
         super(
             `Factory function threw an error during lazy initialization: ${errorMessage}`,
@@ -125,14 +115,12 @@ export class LazilyFactoryError extends LazilyError {
  * Thrown when the factory function returns an invalid value (null, undefined, or non-object)
  */
 export class InvalidFactoryReturnError extends LazilyError {
-    constructor(
-        returnValue: unknown,
-        context?: Record<string, unknown>
-    ) {
+    constructor(returnValue: unknown, context?: Record<string, unknown>) {
         const valueType = returnValue === null ? 'null' : typeof returnValue;
-        const valueDescription = valueType === 'object'
-            ? `object of type ${returnValue?.constructor?.name ?? 'Unknown'}`
-            : valueType;
+        const valueDescription =
+            valueType === 'object'
+                ? `object of type ${returnValue?.constructor?.name ?? 'Unknown'}`
+                : valueType;
 
         super(
             `Factory function returned an invalid value: ${valueDescription}. Factory must return a non-null, non-undefined object that can be proxied.`,
@@ -145,4 +133,3 @@ export class InvalidFactoryReturnError extends LazilyError {
         );
     }
 }
-

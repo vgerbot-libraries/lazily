@@ -1,9 +1,9 @@
-import { lazy } from '../../lib/lazy';
-import { isInitialized } from '../../lib/isInitialized';
-import { onInitialized } from '../../lib/onInitialized';
-import { invalidate } from '../../lib/invalidate';
-import { reset } from '../../lib/reset';
 import { NotLazilyInstanceError } from '../../core/errors';
+import { invalidate } from '../../lib/invalidate';
+import { isInitialized } from '../../lib/isInitialized';
+import { lazy } from '../../lib/lazy';
+import { onInitialized } from '../../lib/onInitialized';
+import { reset } from '../../lib/reset';
 
 describe('reset', () => {
     it('should throw error for non-lazily instance', () => {

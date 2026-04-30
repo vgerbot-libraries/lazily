@@ -1,6 +1,16 @@
 import { Lazily } from '../../core/Lazily';
-import { GET, IS_INITIALIZED, IS_LAZILY, ON_INITIALIZE, INVALIDATE } from '../../core/lazily-instance';
-import { InvalidatedLazilyError, InvalidFactoryReturnError, LazilyFactoryError } from '../../core/errors';
+import {
+    InvalidFactoryReturnError,
+    InvalidatedLazilyError,
+    LazilyFactoryError,
+} from '../../core/errors';
+import {
+    GET,
+    INVALIDATE,
+    IS_INITIALIZED,
+    IS_LAZILY,
+    ON_INITIALIZE,
+} from '../../core/lazily-instance';
 
 describe('Lazily', () => {
     describe('IS_LAZILY', () => {

@@ -1,6 +1,6 @@
+import { isLazilyInstance } from '../../core/lazily-instance';
 import { lazy } from '../../lib/lazy';
 import { wire } from '../../lib/wire';
-import { isLazilyInstance } from '../../core/lazily-instance';
 
 describe('wire', () => {
     it('should replace lazily instance with real value when initialized', () => {
@@ -215,4 +215,3 @@ describe('wire', () => {
         expect(target.service2).toEqual({ value: 42 });
     });
 });
-

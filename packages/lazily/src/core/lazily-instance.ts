@@ -95,7 +95,9 @@ export interface LazilyInstance<T extends object> {
  * }
  * ```
  */
-export function isLazilyInstance<T extends object>(instance: unknown): instance is LazilyInstance<T> {
+export function isLazilyInstance<T extends object>(
+    instance: unknown
+): instance is LazilyInstance<T> {
     return (
         instance !== null &&
         typeof instance === 'object' &&

@@ -1,5 +1,5 @@
-import { isLazilyInstance } from "../core/lazily-instance";
-import { onInitialized } from "./onInitialized";
+import { isLazilyInstance } from '../core/lazily-instance';
+import { onInitialized } from './onInitialized';
 
 /**
  * Wires up an object to automatically replace lazily instances with their initialized values

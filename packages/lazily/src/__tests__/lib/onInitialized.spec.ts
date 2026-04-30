@@ -1,6 +1,6 @@
+import { NotLazilyInstanceError } from '../../core/errors';
 import { lazy } from '../../lib/lazy';
 import { onInitialized } from '../../lib/onInitialized';
-import { NotLazilyInstanceError } from '../../core/errors';
 
 describe('onInitialized', () => {
     it('should throw error for non-lazily instance', () => {

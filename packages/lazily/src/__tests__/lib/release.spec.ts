@@ -1,9 +1,9 @@
 import type { Lazily } from '../../core/Lazily';
-import { GET } from '../../core/lazily-instance';
-import { lazy } from '../../lib/lazy';
-import { isInitialized } from '../../lib/isInitialized';
-import { invalidate } from '../../lib/invalidate';
 import { InvalidatedLazilyError } from '../../core/errors';
+import { GET } from '../../core/lazily-instance';
+import { invalidate } from '../../lib/invalidate';
+import { isInitialized } from '../../lib/isInitialized';
+import { lazy } from '../../lib/lazy';
 
 describe('invalidate', () => {
     it('should do nothing for non-lazily instance', () => {

@@ -1,4 +1,4 @@
-import { lazy, isInitialized, onInitialized, invalidate, reset } from '../index';
+import { invalidate, isInitialized, lazy, onInitialized, reset } from '../index';
 
 describe('integration tests', () => {
     it('should work with class instances', () => {
