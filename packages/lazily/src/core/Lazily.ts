@@ -69,10 +69,11 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
         const context = getContext<T>(this);
         if (isInitializedContext(context)) {
             const instance = context.value;
-            const listeners = context.listeners.get(INVALIDATE_EVENT_KEY) ?? [];
-
-            for (const listener of listeners) {
-                listener(instance);
+            const listeners = context.listeners.get(INVALIDATE_EVENT_KEY);
+            if (listeners) {
+                for (const listener of listeners) {
+                    listener(instance);
+                }
             }
         }
         defineContext(this, {

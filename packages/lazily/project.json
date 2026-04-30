@@ -22,7 +22,7 @@
             "executor": "nx:run-commands",
             "outputs": ["{workspaceRoot}/packages/lazily/dist/index.d.ts"],
             "options": {
-                "command": "rollup -c packages/lazily/rollup.config.dts.ts --configPlugin typescript"
+                "command": "rollup -c packages/lazily/rollup.config.dts.ts --configPlugin 'typescript={tsconfig: \"packages/lazily/tsconfig.dts.json\"}'"
             }
         },
         "build:rollup": {
@@ -34,7 +34,7 @@
                 "tsConfig": "packages/lazily/tsconfig.lib.json",
                 "project": "packages/lazily/package.json",
                 "entryFile": "packages/lazily/src/index.ts",
-                "format": ["esm", "cjs"],
+                "format": ["esm"],
                 "external": [],
                 "rollupConfig": "packages/lazily/rollup.config.ts",
                 "skipTypeCheck": true
