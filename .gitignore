@@ -39,8 +39,4 @@ Thumbs.db
 # Nx
 .nx
 
-# Changeset
-.changeset/*.md
-!.changeset/README.md
-
 docs
