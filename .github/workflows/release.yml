@@ -1,9 +1,11 @@
 name: Release
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types:
+      - closed
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -15,6 +17,7 @@ permissions:
 
 jobs:
   release:
+    if: github.event.pull_request.merged == true
     name: Release
     runs-on: ubuntu-latest
     steps:
