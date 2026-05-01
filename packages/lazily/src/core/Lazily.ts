@@ -14,6 +14,8 @@ import {
     type LazilyInstance,
     ON_INITIALIZE,
     ON_INVALIDATE,
+    REGISTER_RECREATE_CHECKER,
+    RESET,
 } from './lazily-instance';
 
 /**
@@ -29,6 +31,12 @@ const INITIALIZE_EVENT_KEY = Symbol('initialize-event');
 const INVALIDATE_EVENT_KEY = Symbol('invalidate-event');
 
 /**
+ * Internal symbol method to evaluate whether current cache should be kept.
+ * @internal
+ */
+const SHOULD_RECREATE = Symbol('should-recreate');
+
+/**
  * Core class implementing lazy initialization behavior
  * This class wraps a factory function and defers its execution until the value is first accessed.
  * It manages the lifecycle of the lazy instance including initialization, invalidation, and callbacks.
@@ -37,6 +45,11 @@ const INVALIDATE_EVENT_KEY = Symbol('invalidate-event');
  * @internal
  */
 export class Lazily<T extends object> implements LazilyInstance<T> {
+    /**
+     * Predicates used to determine whether a cached instance should be reset.
+     * @internal
+     */
+    private readonly validChecker: Array<()=>boolean> = [];
     /**
      * Creates a new Lazily instance
      * @param factory - Function that creates the underlying value when first accessed
@@ -90,7 +103,12 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
     [GET](): T {
         const context = getContext<T>(this);
         if (isInitializedContext(context)) {
-            return context.value;
+            // If any checker reports stale data, clear cache and re-create.
+            if (this[SHOULD_RECREATE]()) {
+                this[RESET]();
+            } else {
+                return context.value;
+            }
         }
         if (context?.invalidated) {
             throw new InvalidatedLazilyError({
@@ -245,5 +263,55 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
      */
     [ON_INVALIDATE](callback: (instance: T) => void): () => void {
         return this.registerEventListener(INVALIDATE_EVENT_KEY, callback, false);
+    }
+
+    /**
+     * Resets the lazily instance to its uninitialized state
+     * @internal
+     */
+    [RESET]() {
+        const context = getContext<T>(this);
+        if (!context) {
+            return;
+        }
+
+        // If released, reset to uninitialized with empty listeners
+        if (context.invalidated) {
+            defineContext(this, {
+                initialized: false,
+                invalidated: false,
+                listeners: new Map(),
+            });
+            return;
+        }
+
+        // At this point, context is either UninitializedLazilyContext or InitializedLazilyContext
+        // Both have listeners property
+        if ('listeners' in context) {
+            defineContext(this, {
+                initialized: false,
+                invalidated: false,
+                listeners: context.listeners,
+            });
+        }
+    }
+    [SHOULD_RECREATE]() {
+        return this.validChecker.some(it => it())
+    }
+
+    /**
+     * Registers one recreate checker and returns an unsubscribe function.
+     * @internal
+     */
+    [REGISTER_RECREATE_CHECKER](checker: () => boolean) {
+        const bChecker = checker.bind(null);
+        this.validChecker.push(bChecker);
+        return () => {
+            const index = this.validChecker.indexOf(bChecker);
+            if (index === -1) {
+                return;
+            }
+            this.validChecker.splice(index, 1);
+        }
     }
 }
