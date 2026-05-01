@@ -49,7 +49,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
      * Predicates used to determine whether a cached instance should be reset.
      * @internal
      */
-    private readonly validChecker: Array<()=>boolean> = [];
+    private readonly validChecker: Array<() => boolean> = [];
     /**
      * Creates a new Lazily instance
      * @param factory - Function that creates the underlying value when first accessed
@@ -296,7 +296,7 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
         }
     }
     [SHOULD_RECREATE]() {
-        return this.validChecker.some(it => it())
+        return this.validChecker.some((it) => it());
     }
 
     /**
@@ -312,6 +312,6 @@ export class Lazily<T extends object> implements LazilyInstance<T> {
                 return;
             }
             this.validChecker.splice(index, 1);
-        }
+        };
     }
 }

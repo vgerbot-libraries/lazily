@@ -47,7 +47,7 @@ import { isLazilyInstance, REGISTER_RECREATE_CHECKER } from '../core/lazily-inst
  * stop();
  * ```
  */
-export function recreateWhen<T extends object, >(instance: T, when: () => boolean) {
+export function recreateWhen<T extends object>(instance: T, when: () => boolean) {
     if (!isLazilyInstance(instance)) {
         throw new NotLazilyInstanceError(instance, {
             functionName: 'onInvalidate',
@@ -68,31 +68,26 @@ export type Comparator<T> = (prev: T, next: T) => boolean;
  * @param isEqual - Equality comparator. Defaults to `Object.is`.
  * @returns A zero-arg predicate suitable for `recreateWhen`.
  */
-export function onChange<T>(
-  snapshot: () => T,
-  isEqual: Comparator<T> = Object.is
-): () => boolean {
-  let initialized = false;
-  let prev!: T;
+export function onChange<T>(snapshot: () => T, isEqual: Comparator<T> = Object.is): () => boolean {
+    let initialized = false;
+    let prev!: T;
 
-  return () => {
-    const next = snapshot();
+    return () => {
+        const next = snapshot();
 
-    if (!initialized) {
-      initialized = true;
-      prev = next;
-      return false;
-    }
+        if (!initialized) {
+            initialized = true;
+            prev = next;
+            return false;
+        }
 
-    const changed = !isEqual(prev, next);
-    prev = next;
-    return changed;
-  };
+        const changed = !isEqual(prev, next);
+        prev = next;
+        return changed;
+    };
 }
 
 /**
  * Convenience wrapper of `onChange` using strict equality (`===`).
  */
-export const onRefChange = <T>(snapshot: () => T) =>
-  onChange(snapshot, (a, b) => a === b);
-
+export const onRefChange = <T>(snapshot: () => T) => onChange(snapshot, (a, b) => a === b);
