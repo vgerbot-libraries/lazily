@@ -1,8 +1,8 @@
 import { NotLazilyInstanceError } from '../../core/errors';
 import {
     IS_LAZILY,
-    REGISTER_RECREATE_CHECKER,
     type LazilyInstance,
+    REGISTER_RECREATE_CHECKER,
 } from '../../core/lazily-instance';
 import { onChange, onRefChange, recreateWhen } from '../../lib/recreate-condition';
 
