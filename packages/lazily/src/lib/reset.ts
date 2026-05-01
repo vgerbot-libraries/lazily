@@ -1,5 +1,5 @@
 import { defineContext, getContext } from '../core/context';
-import { assertIsLazilyInstance, RESET } from '../core/lazily-instance';
+import { RESET, assertIsLazilyInstance } from '../core/lazily-instance';
 
 /**
  * Resets a lazily instance to its uninitialized state

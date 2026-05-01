@@ -1,5 +1,5 @@
 import { NotLazilyInstanceError } from '../core/errors';
-import { isLazilyInstance, REGISTER_RECREATE_CHECKER } from '../core/lazily-instance';
+import { REGISTER_RECREATE_CHECKER, isLazilyInstance } from '../core/lazily-instance';
 
 /**
  * Registers a recreation predicate for a lazily instance.
