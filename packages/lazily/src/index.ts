@@ -72,3 +72,13 @@ export {
     InvalidFactoryReturnError,
     LazilyErrorCode,
 } from './core/errors';
+
+/**
+ * Recreate condition utilities for controlling when lazily instances should be recreated
+ *
+ * - {@link recreateWhen} - Creates a condition that triggers recreation when a signal changes
+ * - {@link onChange} - Creates a condition using a custom comparator
+ * - {@link onRefChange} - Creates a condition using strict equality (`===`)
+ * - {@link Comparator} - Type for custom comparison functions
+ */
+export { recreateWhen, onChange, onRefChange, type Comparator } from './lib/recreate-condition';
