@@ -42,6 +42,18 @@ export const TRIGGER_INITIALIZE_EVENT = Symbol('trigger-initialize-event');
 export const IS_LAZILY = Symbol('isLazily');
 
 /**
+ * Symbol used to reset a lazily instance
+ * @internal
+ */
+export const RESET = Symbol('reset');
+
+/**
+ * Symbol used to register cache-validity checkers
+ * @internal
+ */
+export const REGISTER_RECREATE_CHECKER = Symbol('register-recreate-checker');
+
+/**
  * Interface representing a lazily-initialized instance
  * @template T - The type of the underlying object
  */
@@ -80,6 +92,17 @@ export interface LazilyInstance<T extends object> {
      * @returns A function to unregister the callback
      */
     [ON_INVALIDATE](callback: (instance: T) => void): () => void;
+
+    /**
+     * Resets the lazily instance to its uninitialized state
+     */
+    [RESET](): void;
+
+    /**
+     * Registers a checker for current cached value validity.
+     * Returns an unsubscribe function that removes the checker.
+     */
+    [REGISTER_RECREATE_CHECKER](checker: () => boolean): () => void;
 }
 
 /**
