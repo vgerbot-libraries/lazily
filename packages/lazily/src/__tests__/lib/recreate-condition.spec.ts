@@ -4,7 +4,7 @@ import {
     type LazilyInstance,
     REGISTER_RECREATE_CHECKER,
 } from '../../core/lazily-instance';
-import { onChange, onRefChange, recreateWhen } from '../../lib/recreate-condition';
+import { onChange, onRefChange, recreateWhen, when } from '../../lib/recreate-condition';
 
 describe('recreate-condition', () => {
     describe('recreateWhen', () => {
@@ -95,6 +95,34 @@ describe('recreate-condition', () => {
             expect(when()).toBe(false);
             expect(when()).toBe(true);
             expect(when()).toBe(true);
+        });
+    });
+
+    describe('when', () => {
+        it('should compose token conditions and keep refChange state between evaluations', () => {
+            let height = 100;
+            let width = 200;
+            const condition = when((token) =>
+                token.or(
+                    token.refChange(() => height),
+                    token.refChange(() => width)
+                )
+            );
+
+            expect(condition()).toBe(false);
+            expect(condition()).toBe(false);
+
+            height = 120;
+            expect(condition()).toBe(true);
+            expect(condition()).toBe(false);
+
+            width = 240;
+            expect(condition()).toBe(true);
+        });
+
+        it('should support boolean literal conditions', () => {
+            const condition = when(() => true);
+            expect(condition()).toBe(true);
         });
     });
 });
