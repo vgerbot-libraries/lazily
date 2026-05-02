@@ -8,6 +8,9 @@ import { REGISTER_RECREATE_CHECKER, isLazilyInstance } from '../core/lazily-inst
  * When it returns `true`, the current cached value is treated as stale and
  * the lazily instance is recreated before continuing the access.
  *
+ * `when` can be a plain predicate or a composed predicate built with
+ * {@link when} and condition tokens.
+ *
  * @throws {NotLazilyInstanceError}
  * Throws when `instance` is not created by `lazy(...)`.
  *
@@ -46,6 +49,21 @@ import { REGISTER_RECREATE_CHECKER, isLazilyInstance } from '../core/lazily-inst
  *
  * stop();
  * ```
+ *
+ * @example
+ * ```ts
+ * const stop = recreateWhen(
+ *   viewportService,
+ *   when(token =>
+ *     token.or(
+ *       token.refChange(() => window.innerHeight),
+ *       token.refChange(() => window.innerWidth),
+ *     ),
+ *   ),
+ * );
+ *
+ * stop();
+ * ```
  */
 export function recreateWhen<T extends object>(instance: T, when: () => boolean) {
     if (!isLazilyInstance(instance)) {
@@ -57,6 +75,87 @@ export function recreateWhen<T extends object>(instance: T, when: () => boolean)
 }
 
 export type Comparator<T> = (prev: T, next: T) => boolean;
+
+export type ConditionNode = () => boolean;
+
+export type ConditionLike = boolean | ConditionNode;
+
+export interface ConditionToken {
+    refChange<T>(snapshot: () => T): ConditionNode;
+    changed<T>(snapshot: () => T, isEqual?: Comparator<T>): ConditionNode;
+    any(...conditions: ConditionLike[]): ConditionNode;
+    all(...conditions: ConditionLike[]): ConditionNode;
+    iff(
+        condition: ConditionLike,
+        thenCondition: ConditionLike,
+        elseCondition?: ConditionLike
+    ): ConditionNode;
+    and(...conditions: ConditionLike[]): ConditionNode;
+    or(...conditions: ConditionLike[]): ConditionNode;
+    not(condition: ConditionLike): ConditionNode;
+    once(condition: ConditionLike): ConditionNode;
+}
+
+function resolveCondition(condition: ConditionLike): boolean {
+    if (typeof condition === 'function') {
+        return condition();
+    }
+    return condition;
+}
+
+function createConditionToken(): ConditionToken {
+    const and =
+        (...conditions: ConditionLike[]) =>
+        () =>
+            conditions.every(resolveCondition);
+    const or =
+        (...conditions: ConditionLike[]) =>
+        () =>
+            conditions.some(resolveCondition);
+
+    return {
+        refChange: onRefChange,
+        changed: onChange,
+        any: or,
+        all: and,
+        iff:
+            (condition, thenCondition, elseCondition = false) =>
+            () => {
+                if (resolveCondition(condition)) {
+                    return resolveCondition(thenCondition);
+                }
+                return resolveCondition(elseCondition);
+            },
+        and,
+        or,
+        not: (condition) => () => !resolveCondition(condition),
+        once: (condition) => {
+            let fired = false;
+            return () => {
+                if (fired) {
+                    return false;
+                }
+                if (!resolveCondition(condition)) {
+                    return false;
+                }
+                fired = true;
+                return true;
+            };
+        },
+    };
+}
+
+/**
+ * Creates a composable recreation predicate using a condition token.
+ *
+ * The `callback` is executed once to build a reusable condition graph.
+ * Returned predicate evaluates the graph on each access.
+ */
+export function when(callback: (token: ConditionToken) => ConditionLike): () => boolean {
+    const token = createConditionToken();
+    const condition = callback(token);
+    return () => resolveCondition(condition);
+}
 
 /**
  * Builds a recreation predicate by comparing consecutive snapshots.

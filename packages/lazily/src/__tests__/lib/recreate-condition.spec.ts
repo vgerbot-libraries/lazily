@@ -4,7 +4,7 @@ import {
     type LazilyInstance,
     REGISTER_RECREATE_CHECKER,
 } from '../../core/lazily-instance';
-import { onChange, onRefChange, recreateWhen } from '../../lib/recreate-condition';
+import { onChange, onRefChange, recreateWhen, when } from '../../lib/recreate-condition';
 
 describe('recreate-condition', () => {
     describe('recreateWhen', () => {
@@ -95,6 +95,113 @@ describe('recreate-condition', () => {
             expect(when()).toBe(false);
             expect(when()).toBe(true);
             expect(when()).toBe(true);
+        });
+    });
+
+    describe('when', () => {
+        it('should compose token conditions and keep refChange state between evaluations', () => {
+            let height = 100;
+            let width = 200;
+            const condition = when((token) =>
+                token.or(
+                    token.refChange(() => height),
+                    token.refChange(() => width)
+                )
+            );
+
+            expect(condition()).toBe(false);
+            expect(condition()).toBe(false);
+
+            height = 120;
+            expect(condition()).toBe(true);
+            expect(condition()).toBe(false);
+
+            width = 240;
+            expect(condition()).toBe(true);
+        });
+
+        it('should support boolean literal conditions', () => {
+            const condition = when(() => true);
+            expect(condition()).toBe(true);
+        });
+
+        it('should support any/all aliases', () => {
+            let a = false;
+            let b = false;
+
+            const anyCondition = when((token) =>
+                token.any(
+                    () => a,
+                    () => b
+                )
+            );
+            const allCondition = when((token) =>
+                token.all(
+                    () => a,
+                    () => b
+                )
+            );
+
+            expect(anyCondition()).toBe(false);
+            expect(allCondition()).toBe(false);
+
+            a = true;
+            expect(anyCondition()).toBe(true);
+            expect(allCondition()).toBe(false);
+
+            b = true;
+            expect(anyCondition()).toBe(true);
+            expect(allCondition()).toBe(true);
+        });
+
+        it('should support once for one-time trigger', () => {
+            let tick = 0;
+            const condition = when((token) => token.once(token.changed(() => tick)));
+
+            expect(condition()).toBe(false);
+
+            tick = 1;
+            expect(condition()).toBe(true);
+
+            tick = 2;
+            expect(condition()).toBe(false);
+            expect(condition()).toBe(false);
+        });
+
+        it('should support iff branch with explicit else condition', () => {
+            let enabled = false;
+            let left = false;
+            let right = false;
+
+            const condition = when((token) =>
+                token.iff(
+                    () => enabled,
+                    () => left,
+                    () => right
+                )
+            );
+
+            expect(condition()).toBe(false);
+
+            right = true;
+            expect(condition()).toBe(true);
+
+            enabled = true;
+            expect(condition()).toBe(false);
+
+            left = true;
+            expect(condition()).toBe(true);
+        });
+
+        it('should default else branch to false when omitted', () => {
+            let enabled = false;
+            const condition = when((token) => token.iff(() => enabled, true));
+
+            expect(condition()).toBe(false);
+            enabled = true;
+            expect(condition()).toBe(true);
+            enabled = false;
+            expect(condition()).toBe(false);
         });
     });
 });
