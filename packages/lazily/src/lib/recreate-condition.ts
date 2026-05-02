@@ -83,9 +83,17 @@ export type ConditionLike = boolean | ConditionNode;
 export interface ConditionToken {
     refChange<T>(snapshot: () => T): ConditionNode;
     changed<T>(snapshot: () => T, isEqual?: Comparator<T>): ConditionNode;
+    any(...conditions: ConditionLike[]): ConditionNode;
+    all(...conditions: ConditionLike[]): ConditionNode;
+    iff(
+        condition: ConditionLike,
+        thenCondition: ConditionLike,
+        elseCondition?: ConditionLike
+    ): ConditionNode;
     and(...conditions: ConditionLike[]): ConditionNode;
     or(...conditions: ConditionLike[]): ConditionNode;
     not(condition: ConditionLike): ConditionNode;
+    once(condition: ConditionLike): ConditionNode;
 }
 
 function resolveCondition(condition: ConditionLike): boolean {
@@ -96,18 +104,44 @@ function resolveCondition(condition: ConditionLike): boolean {
 }
 
 function createConditionToken(): ConditionToken {
+    const and =
+        (...conditions: ConditionLike[]) =>
+        () =>
+            conditions.every(resolveCondition);
+    const or =
+        (...conditions: ConditionLike[]) =>
+        () =>
+            conditions.some(resolveCondition);
+
     return {
         refChange: onRefChange,
         changed: onChange,
-        and:
-            (...conditions) =>
-            () =>
-                conditions.every(resolveCondition),
-        or:
-            (...conditions) =>
-            () =>
-                conditions.some(resolveCondition),
+        any: or,
+        all: and,
+        iff:
+            (condition, thenCondition, elseCondition = false) =>
+            () => {
+                if (resolveCondition(condition)) {
+                    return resolveCondition(thenCondition);
+                }
+                return resolveCondition(elseCondition);
+            },
+        and,
+        or,
         not: (condition) => () => !resolveCondition(condition),
+        once: (condition) => {
+            let fired = false;
+            return () => {
+                if (fired) {
+                    return false;
+                }
+                if (!resolveCondition(condition)) {
+                    return false;
+                }
+                fired = true;
+                return true;
+            };
+        },
     };
 }
 

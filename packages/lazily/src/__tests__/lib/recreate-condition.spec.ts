@@ -124,5 +124,84 @@ describe('recreate-condition', () => {
             const condition = when(() => true);
             expect(condition()).toBe(true);
         });
+
+        it('should support any/all aliases', () => {
+            let a = false;
+            let b = false;
+
+            const anyCondition = when((token) =>
+                token.any(
+                    () => a,
+                    () => b
+                )
+            );
+            const allCondition = when((token) =>
+                token.all(
+                    () => a,
+                    () => b
+                )
+            );
+
+            expect(anyCondition()).toBe(false);
+            expect(allCondition()).toBe(false);
+
+            a = true;
+            expect(anyCondition()).toBe(true);
+            expect(allCondition()).toBe(false);
+
+            b = true;
+            expect(anyCondition()).toBe(true);
+            expect(allCondition()).toBe(true);
+        });
+
+        it('should support once for one-time trigger', () => {
+            let tick = 0;
+            const condition = when((token) => token.once(token.changed(() => tick)));
+
+            expect(condition()).toBe(false);
+
+            tick = 1;
+            expect(condition()).toBe(true);
+
+            tick = 2;
+            expect(condition()).toBe(false);
+            expect(condition()).toBe(false);
+        });
+
+        it('should support iff branch with explicit else condition', () => {
+            let enabled = false;
+            let left = false;
+            let right = false;
+
+            const condition = when((token) =>
+                token.iff(
+                    () => enabled,
+                    () => left,
+                    () => right
+                )
+            );
+
+            expect(condition()).toBe(false);
+
+            right = true;
+            expect(condition()).toBe(true);
+
+            enabled = true;
+            expect(condition()).toBe(false);
+
+            left = true;
+            expect(condition()).toBe(true);
+        });
+
+        it('should default else branch to false when omitted', () => {
+            let enabled = false;
+            const condition = when((token) => token.iff(() => enabled, true));
+
+            expect(condition()).toBe(false);
+            enabled = true;
+            expect(condition()).toBe(true);
+            enabled = false;
+            expect(condition()).toBe(false);
+        });
     });
 });
